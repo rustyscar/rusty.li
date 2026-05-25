@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>築遠 AI 使用教學手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1B2A33;
+  --ink-soft: #2C3D47;
+  --ink-mute: #5E6E78;
+  --ink-light: #9AA5AE;
+  --paper: #FFFFFF;
+  --paper-soft: #FAFBFC;
+  --panel: #F4F6F8;
+  --line: #E1E5E9;
+  --line-soft: #ECEFF2;
+
+  --accent: #0E7C7B;
+  --accent-soft: #4FA8A7;
+  --accent-bg: #E6F2F1;
+  --accent-bg-deep: #CFE7E5;
+
+  --warn: #C77B26;
+  --warn-soft: #E09554;
+  --warn-bg: #FBEFDE;
+
+  --danger: #C0392B;
+  --danger-bg: #FBE6E3;
+
+  --gold: #B8893E;
+  --gold-bg: #F8F1E2;
+
+  --font-sans: 'Noto Sans TC', 'PingFang TC', '微軟正黑體', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  color: var(--ink-soft);
+  background: var(--paper);
+  line-height: 1.85;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  padding: 50px 30px 80px;
+}
+
+.container { max-width: 920px; margin: 0 auto; }
+
+/* === 側邊導覽 === */
+.side-nav {
+  position: fixed;
+  top: 50%;
+  right: 28px;
+  transform: translateY(-50%);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(27, 42, 51, 0.05);
+}
+.side-nav .sn-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-light);
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.side-nav a {
+  display: block;
+  padding: 5px 0;
+  color: var(--ink-mute);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--line-soft);
+  transition: color 0.15s;
+}
+.side-nav a:last-child { border-bottom: 0; }
+.side-nav a:hover { color: var(--accent); }
+.side-nav a strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+@media (max-width: 1240px) {
+  .side-nav { display: none; }
+}
+
+/* === 文件總標題區 === */
+.doc-header {
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 28px;
+  margin-bottom: 48px;
+}
+.doc-header .doc-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.doc-header h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin-bottom: 14px;
+}
+.doc-header .doc-sub {
+  font-size: 1.1rem;
+  color: var(--ink-mute);
+  font-weight: 400;
+  line-height: 1.7;
+}
+.doc-header .doc-meta {
+  margin-top: 22px;
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+}
+.doc-header .doc-meta strong { color: var(--ink); font-weight: 700; }
+
+/* === 目錄 === */
+.toc {
+  border: 1px solid var(--line);
+  margin-bottom: 60px;
+  background: var(--paper-soft);
+}
+.toc-title {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 24px;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.toc-item {
+  padding: 18px 24px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: background 0.15s;
+}
+.toc-item:hover { background: var(--accent-bg); }
+.toc-item:nth-child(even) { border-right: 0; }
+.toc-item .tc-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+}
+.toc-item .tc-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.toc-item .tc-desc {
+  font-size: 0.85rem;
+  color: var(--ink-mute);
+  line-height: 1.6;
+}
+
+/* === 篇章標題 === */
+.part-heading {
+  margin: 60px 0 36px;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--accent);
+  scroll-margin-top: 24px;
+}
+.part-heading.first { margin-top: 0; }
+.part-heading .pn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.part-heading h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+.part-heading .part-lead {
+  font-size: 1.02rem;
+  color: var(--ink-mute);
+  line-height: 1.85;
+  max-width: 760px;
+}
+
+/* === 節 === */
+.section {
+  margin-bottom: 56px;
+  scroll-margin-top: 24px;
+}
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.section-head .sn {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+.section-head h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.002em;
+  line-height: 1.35;
+}
+
+.section p {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.95;
+  margin-bottom: 16px;
+}
+.section p strong { color: var(--ink); font-weight: 700; }
+
+.subsection-head {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 28px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--accent);
+  display: inline-block;
+  padding-right: 24px;
+}
+
+/* === 重點框 === */
+.callout {
+  border: 1.5px solid var(--accent);
+  border-left-width: 5px;
+  background: var(--accent-bg);
+  padding: 20px 26px;
+  margin: 22px 0;
+}
+.callout .cl-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.callout .cl-body {
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.85;
+}
+.callout .cl-body strong { color: var(--accent); font-weight: 700; }
+
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout.warn .cl-label { color: var(--warn); }
+.callout.warn .cl-body strong { color: var(--warn); }
+.callout.danger { border-color: var(--danger); background: var(--danger-bg); }
+.callout.danger .cl-label { color: var(--danger); }
+.callout.danger .cl-body strong { color: var(--danger); }
+.callout.gold { border-color: var(--gold); background: var(--gold-bg); }
+.callout.gold .cl-label { color: var(--gold); }
+.callout.gold .cl-body strong { color: var(--gold); }
+
+/* === 引述塊 === */
+.quote-block {
+  border-left: 4px solid var(--accent);
+  padding: 14px 22px;
+  margin: 20px 0;
+  background: var(--paper-soft);
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+/* === 對照表 === */
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+}
+.compare thead {
+  background: var(--accent-bg);
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+.compare thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  border-right: 1px solid var(--accent-bg-deep);
+}
+.compare thead th:last-child { border-right: 0; }
+.compare tbody tr { border-bottom: 1px solid var(--line); }
+.compare tbody tr:last-child { border-bottom: 1.5px solid var(--ink); }
+.compare tbody td {
+  padding: 14px 16px;
+  vertical-align: top;
+  line-height: 1.8;
+  font-size: 0.95rem;
+  border-right: 1px solid var(--line-soft);
+}
+.compare tbody td:last-child { border-right: 0; }
+.compare tbody td.dim {
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--paper-soft);
+  width: 22%;
+}
+.compare tbody td.lhs { background: var(--paper-soft); }
+
+/* === 訊號清單 === */
+.signal-list {
+  list-style: none;
+  margin: 18px 0 24px;
+}
+.signal-list li {
+  position: relative;
+  padding: 10px 0 10px 36px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.signal-list li:last-child { border-bottom: 0; }
+.signal-list li::before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  color: var(--warn);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.signal-list li strong { color: var(--ink); font-weight: 700; }
+
+/* === 規章清單 === */
+.rule-list {
+  list-style: none;
+  counter-reset: rule;
+  margin: 18px 0 8px;
+}
+.rule-list li {
+  position: relative;
+  padding: 14px 0 14px 44px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.rule-list li:last-child { border-bottom: 0; }
+.rule-list li::before {
+  counter-increment: rule;
+  content: counter(rule, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--danger);
+  padding: 2px 8px;
+  letter-spacing: 0.05em;
+}
+.rule-list.caution li::before { background: var(--warn); }
+.rule-list li strong { color: var(--ink); font-weight: 700; }
+
+/* === 踩坑卡 === */
+.pit-card {
+  border: 1px solid var(--line);
+  margin: 22px 0;
+  background: var(--paper);
+  overflow: hidden;
+}
+.pit-card .pit-head {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.pit-card .pit-no {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--accent-soft);
+}
+.pit-card .pit-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  flex: 1;
+}
+.pit-card .pit-body { padding: 20px 26px 24px; }
+.pit-card .pit-row { margin-bottom: 14px; }
+.pit-card .pit-row:last-child { margin-bottom: 0; }
+.pit-card .pit-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.pit-card .pit-text {
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.pit-card .pit-text strong { color: var(--ink); font-weight: 700; }
+.pit-card .pit-signal {
+  background: var(--warn-bg);
+  border-left: 3px solid var(--warn);
+  padding: 12px 18px;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.pit-card .pit-signal strong { color: var(--warn); }
+
+/* === 對話片段 === */
+.chat-block {
+  margin: 18px 0;
+  border: 1px solid var(--line);
+  background: var(--paper-soft);
+  padding: 18px 22px;
+  font-size: 0.94rem;
+  line-height: 1.8;
+}
+.chat-block .ch-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.chat-block .ch-text {
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+.chat-block .ch-text:last-child { margin-bottom: 0; }
+.chat-block .ch-text.user { font-weight: 500; }
+.chat-block .ch-divider {
+  border-top: 1px dashed var(--line);
+  margin: 10px 0;
+}
+
+/* === 註腳 === */
+.note-block {
+  margin: 18px 0;
+  padding: 12px 18px;
+  background: var(--paper-soft);
+  border-left: 3px solid var(--ink-light);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--ink-mute);
+  line-height: 1.75;
+}
+
+/* === 兩欄對照 === */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 22px 0;
+}
+.two-col .col {
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.two-col .col.bad { border-left: 4px solid var(--danger); }
+.two-col .col.good { border-left: 4px solid var(--accent); }
+.two-col .col-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.two-col .col.bad .col-label { color: var(--danger); }
+.two-col .col.good .col-label { color: var(--accent); }
+.two-col .col-text {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.two-col .col-text strong { color: var(--ink); font-weight: 700; }
+
+/* === 三層能力卡 === */
+.level-card {
+  margin: 18px 0;
+  padding: 20px 26px;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--accent);
+  background: var(--paper);
+}
+.level-card .lv-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.level-card .lv-num {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+.level-card .lv-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.level-card .lv-body {
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.level-card .lv-body strong { color: var(--ink); font-weight: 700; }
+
+/* === 步驟流程 === */
+.steps {
+  margin: 22px 0;
+}
+.step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--line);
+}
+.step:last-child { border-bottom: 0; }
+.step .step-n {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--accent);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step .step-body { padding-top: 4px; }
+.step .step-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.step .step-text {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.step .step-text strong { color: var(--ink); font-weight: 700; }
+
+/* === 案例展示卡 === */
+.case-card {
+  margin: 22px 0;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.case-card .case-head {
+  background: var(--accent-bg);
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--accent-bg-deep);
+}
+.case-card .case-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.case-card .case-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.case-card .case-body {
+  padding: 20px 22px;
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.case-card .case-body strong { color: var(--ink); font-weight: 700; }
+.case-card .case-body p { margin-bottom: 12px; }
+.case-card .case-body p:last-child { margin-bottom: 0; }
+
+/* === 篇尾 === */
+.part-end {
+  margin-top: 60px;
+  padding: 30px 36px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+}
+.part-end .pe-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.part-end h4 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.part-end p {
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 10px;
+}
+.part-end p:last-child { margin-bottom: 0; }
+.part-end strong { color: var(--accent); font-weight: 700; }
+
+/* === 附錄表格 === */
+.appendix-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 0.92rem;
+}
+.appendix-table thead {
+  background: var(--ink);
+  color: var(--paper);
+}
+.appendix-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.appendix-table tbody tr { border-bottom: 1px solid var(--line); }
+.appendix-table tbody td {
+  padding: 12px 16px;
+  vertical-align: top;
+  line-height: 1.75;
+}
+.appendix-table tbody td.term {
+  font-weight: 700;
+  color: var(--ink);
+  width: 28%;
+  background: var(--paper-soft);
+}
+
+/* === 選讀標記 === */
+.optional-tag {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-left: 14px;
+  vertical-align: middle;
+}
+
+/* === 頁尾 === */
+.doc-footer {
+  margin-top: 70px;
+  padding-top: 24px;
+  border-top: 2px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  html { font-size: 15px; }
+  body { padding: 30px 18px; }
+  .doc-header h1 { font-size: 2rem; }
+  .part-heading h2 { font-size: 1.55rem; }
+  .section-head h3 { font-size: 1.25rem; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .toc-item { border-right: 0; }
+  .two-col { grid-template-columns: 1fr; }
+  .doc-header .doc-meta { flex-direction: column; gap: 6px; }
+  .compare { font-size: 0.85rem; }
+  .compare tbody td.dim { width: auto; }
+  .step { grid-template-columns: 1fr; gap: 8px; }
+}
+@media print {
+  body { padding: 30px; }
+  .side-nav { display: none; }
+  .section, .pit-card, .callout, .case-card, .level-card { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- === 側邊導覽 === -->
+<nav class="side-nav">
+  <div class="sn-title">Navigation</div>
+  <a href="#part1"><strong>P1</strong> · 認識</a>
+  <a href="#part2"><strong>P2</strong> · 怎麼問</a>
+  <a href="#part3"><strong>P3</strong> · 累積</a>
+  <a href="#part4"><strong>P4</strong> · 進階 A</a>
+  <a href="#part5"><strong>P5</strong> · 各職位</a>
+  <a href="#part6"><strong>P6</strong> · 進階 B</a>
+  <a href="#part7"><strong>P7</strong> · 踩坑</a>
+  <a href="#appendix"><strong>AP</strong> · 附錄</a>
+</nav>
+
+<div class="container">
+
+<!-- === 文件總標題 === -->
+<header class="doc-header">
+  <div class="doc-tag">內部教育訓練 · TRAINING MANUAL</div>
+  <h1>築遠 AI 使用教學手冊</h1>
+  <p class="doc-sub">給築遠全體同仁的 Claude 入門指南 — 觀念建立、實際運用、避開常見的坑</p>
+  <div class="doc-meta">
+    <span><strong>適用對象</strong> · 全公司同仁</span>
+    <span><strong>適用工具</strong> · Claude Team 方案</span>
+    <span><strong>版本</strong> · 2026-05 初版</span>
+  </div>
+</header>
+
+<!-- === 不同職位的核心應用 總覽 === -->
+<div style="margin-bottom: 50px; border: 1.5px solid var(--accent); background: var(--paper);">
+  <div style="background: var(--accent); color: var(--paper); padding: 14px 24px; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase;">
+    BY ROLE · 不同職位的核心應用
+  </div>
+  <div style="padding: 22px 28px;">
+    <p style="font-size: 0.97rem; color: var(--ink-soft); line-height: 1.85; margin-bottom: 18px;">
+      本手冊主體針對<strong style="color: var(--ink);">全體同仁</strong>撰寫,但不同職位的核心應用場景略有差異。下表可以快速看到「<strong style="color: var(--ink);">你的職位最有用的章節在哪</strong>」。詳細場景說明見 <strong style="color: var(--accent);">PART 5</strong>。
+    </p>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
+      <thead>
+        <tr style="background: var(--accent-bg); border-top: 2px solid var(--accent); border-bottom: 1.5px solid var(--accent);">
+          <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--ink); width: 22%;">職位</th>
+          <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--ink);">核心應用 · 重點關注章節</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid var(--line);">
+          <td style="padding: 12px 14px; font-weight: 700; color: var(--ink); background: var(--paper-soft); vertical-align: top;">結構工程師</td>
+          <td style="padding: 12px 14px; line-height: 1.75; vertical-align: top;">規範查詢、技術討論、審查回覆、規範比對、Excel 計算工具 — 主體章節全適用</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--line);">
+          <td style="padding: 12px 14px; font-weight: 700; color: var(--ink); background: var(--paper-soft); vertical-align: top;">繪圖工程師</td>
+          <td style="padding: 12px 14px; line-height: 1.75; vertical-align: top;">CAD 操作排解、修改說明翻譯、圖檔目錄整理、規格表整理 — 主讀 PART 1 / 2 / 3 / 5 / 7</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--line);">
+          <td style="padding: 12px 14px; font-weight: 700; color: var(--ink); background: var(--paper-soft); vertical-align: top;">財務及行政人員</td>
+          <td style="padding: 12px 14px; line-height: 1.75; vertical-align: top;">文件統整、管理清單整合、工時統計、翻譯、文件歸檔分類 — 主讀 PART 1 / 2 / 3 / 5 / 7</td>
+        </tr>
+        <tr style="border-bottom: 1.5px solid var(--ink);">
+          <td style="padding: 12px 14px; font-weight: 700; color: var(--ink); background: var(--paper-soft); vertical-align: top;">工務工程師</td>
+          <td style="padding: 12px 14px; line-height: 1.75; vertical-align: top;">查驗紀錄整理、會議紀錄整理、承包商來文回覆、規範查詢、業主協調文件 — 主體章節大多適用</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- === 目錄 === -->
+<div class="toc">
+  <div class="toc-title">CONTENTS · 目錄</div>
+  <div class="toc-grid">
+    <a class="toc-item" href="#part1">
+      <div class="tc-num">PART 1</div>
+      <div class="tc-name">認識</div>
+      <div class="tc-desc">AI 是什麼、跟 Google 的差別、會用什麼方式出錯、不該交給它做的事</div>
+    </a>
+    <a class="toc-item" href="#part2">
+      <div class="tc-num">PART 2</div>
+      <div class="tc-name">怎麼問</div>
+      <div class="tc-desc">三層 prompt 能力、爛問法 vs 好問法、四種基本運用場景</div>
+    </a>
+    <a class="toc-item" href="#part3">
+      <div class="tc-num">PART 3</div>
+      <div class="tc-name">累積</div>
+      <div class="tc-desc">個人 Project、共用 Project、Claude 裡只放副本的鐵則</div>
+    </a>
+    <a class="toc-item" href="#part4">
+      <div class="tc-num">PART 4</div>
+      <div class="tc-name">進階運用 A · 文書產出</div>
+      <div class="tc-desc">審查回覆整理、資料比較、Claude for Office 系列</div>
+    </a>
+    <a class="toc-item" href="#part5">
+      <div class="tc-num">PART 5</div>
+      <div class="tc-name">不同職位的應用場景</div>
+      <div class="tc-desc">繪圖工程師、財務及行政、工務工程師的具體應用與注意事項</div>
+    </a>
+    <a class="toc-item" href="#part6">
+      <div class="tc-num">PART 6</div>
+      <div class="tc-name">進階運用 B · 工具開發</div>
+      <div class="tc-desc">Excel 小工具、生成文件或網頁(選讀)</div>
+    </a>
+    <a class="toc-item" href="#part7">
+      <div class="tc-num">PART 7</div>
+      <div class="tc-name">踩坑日誌</div>
+      <div class="tc-desc">7 個初學者最容易跌的坑 + 辨識訊號</div>
+    </a>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===                  PART 1 · 認識                === -->
+<!-- ===================================================== -->
+
+<div class="part-heading first" id="part1">
+  <div class="pn">PART 1 · FOUNDATIONS</div>
+  <h2>第一篇 · 認識</h2>
+  <p class="part-lead">
+    這一篇不是要把生成式 AI 講得多清楚,而是要先把幾件「不認識就會吃虧」的事說明白。
+    讀完這一篇,你會知道 AI 跟 Google 不一樣在哪、它會用什麼方式出錯、什麼狀況下要停下來懷疑、以及哪些事情不該交給它做。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">01</span>
+    <h3>認識生成式 AI</h3>
+  </div>
+
+  <p>
+    把 Claude 想成一個「<strong>讀過大量文字、會用合理方式回答你的助理</strong>」 — 就夠了。它不是搜尋引擎、不是計算機、不是資料庫,也不是專家系統。它的工作方式是:你給它一段文字,它根據自己學過的東西,生出一段「在語言上看起來合理」的回應。
+  </p>
+
+  <p>這句話裡有兩個重點:</p>
+
+  <ul class="signal-list">
+    <li><strong>「合理」不等於「正確」。</strong>它會給你看起來像專業答案的東西,但這個答案可能是對的,也可能完全是它編出來的。</li>
+    <li><strong>它沒有「不會」這個概念。</strong>你問它,它就會生一段回答 — 即使這個領域它根本不懂,它也會生。所以「你要會判斷它什麼時候在亂講」是基本功。</li>
+  </ul>
+
+  <div class="callout">
+    <div class="cl-label">本節重點</div>
+    <div class="cl-body">
+      生成式 AI 是<strong>「會生答案的助理」</strong>,不是「會給你正確答案的工具」。要把它當同事用,不要當權威用。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">02</span>
+    <h3>跟 Google 的本質差異</h3>
+  </div>
+
+  <p>很多人第一次用 Claude,會把它當成「進階版 Google」 — 這個誤會會讓你低估它,也會讓你誤用它。我們用一張對照表把差異講清楚。</p>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 22%;">面向</th>
+        <th style="width: 39%;">Google 搜尋</th>
+        <th style="width: 39%;">Claude</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">給你的東西</td><td class="lhs">「跟你問題相關的網頁」清單</td><td>「針對你問題的直接回答」</td></tr>
+      <tr><td class="dim">資訊來源</td><td class="lhs">真實存在的網頁,有連結可查</td><td>它「學過」的資料,但你看不到出處</td></tr>
+      <tr><td class="dim">出錯方式</td><td class="lhs">找不到、或找到不相干的</td><td>給你一個「聽起來很對但其實是錯」的答案</td></tr>
+      <tr><td class="dim">記憶</td><td class="lhs">每次搜尋互不相干</td><td>同一個對話裡記得你之前說過的話</td></tr>
+      <tr><td class="dim">能不能討論</td><td class="lhs">不能。你只能換關鍵字再搜</td><td>可以。可以追問、反駁、修正</td></tr>
+      <tr><td class="dim">適合的問題</td><td class="lhs">明確的查詢 — 「ASCE 7-22 PDF 哪裡下載」</td><td>需要整理、推論、比較的問題 — 「ASCE 7-22 跟 7-16 隔震章節的差異」</td></tr>
+    </tbody>
+  </table>
+
+  <p>所以 Google 跟 Claude <strong>不是同一類工具</strong> — 它們解決的是不同類型的問題。Google 適合「我知道我要找什麼」的查詢,Claude 適合「我有個問題想討論清楚」的諮詢。</p>
+
+  <div class="callout">
+    <div class="cl-label">怎麼判斷該用哪個</div>
+    <div class="cl-body">
+      如果你要找「<strong>一個存在的東西</strong>」(某份規範的 PDF、某家廠商的網頁、某個產品的規格表) — 用 Google。<br>
+      如果你要「<strong>把一個問題想清楚</strong>」(這兩本規範差在哪、這個做法為什麼合理、這個審查意見怎麼回) — 用 Claude。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">03</span>
+    <h3>它會出錯的方式</h3>
+  </div>
+
+  <p>Claude 會出錯。這不是缺陷,是它的<strong>運作方式本身</strong>就會產生錯誤。重點不是「它會不會錯」(會),而是「它會用什麼方式錯」 — 認得這些錯誤模式,你才知道什麼時候要停下來懷疑。</p>
+
+  <div class="subsection-head">三種典型錯誤模式</div>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 22%;">錯誤模式</th>
+        <th style="width: 39%;">會發生什麼</th>
+        <th style="width: 39%;">為什麼會這樣</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">會討好</td><td class="lhs">你怎麼問,它怎麼答。你前提錯了,它順著答。你說「我覺得 X」,它傾向支持 X</td><td>它被訓練成「給使用者好的體驗」,有附和傾向</td></tr>
+      <tr><td class="dim">會編造</td><td class="lhs">回答中出現不存在的條號、不存在的論文、不存在的案例 — 但看起來都很正式</td><td>它要「生出合理的答案」,沒有就會用最像的東西補上</td></tr>
+      <tr><td class="dim">會混淆</td><td class="lhs">把不同版本的規範混在一起講、把不同國家的標準混在一起講、把對岸用詞夾進台灣中文</td><td>它的訓練資料裡這些東西混在一起,沒有強區分</td></tr>
+    </tbody>
+  </table>
+
+  <p>這三種錯誤模式有個共通點:<strong>錯的答案看起來和對的答案幾乎一樣專業</strong>。它不會用「呃我不太確定」這種口氣 — 它用同樣的肯定語氣,給你正確答案,也給你錯誤答案。你不能靠「聽起來像不像」來判斷。</p>
+
+  <div class="callout warn">
+    <div class="cl-label">關鍵認知</div>
+    <div class="cl-body">
+      Claude 的<strong>肯定語氣 ≠ 答案的可信度</strong>。它對自己編造的條號,和對它真的知道的事實,是用一樣的口氣在講。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">04</span>
+    <h3>該停下來懷疑的訊號</h3>
+  </div>
+
+  <p>既然不能靠語氣判斷,就要靠「訊號」 — 看到下面這些情況,先停下來,別急著把 Claude 的答案抄下去。</p>
+
+  <ul class="signal-list">
+    <li><strong>它給你一個完整的條號 / 文獻 / 論文出處</strong> — 例如「ASCE 7-22 § 17.5.4」、「Smith et al. (2019) Journal of Structural Engineering」 — 而你腦中沒印象。<span style="color: var(--ink-mute);">→ 必須回查原文。</span></li>
+    <li><strong>它對一個牽涉具體案件條件的問題,給了通用答案</strong> — 你沒提到的條件(基地土層、相鄰結構、業主特殊要求),它沒問就直接答。<span style="color: var(--ink-mute);">→ 它在用「常規答案」回應你的特殊問題。</span></li>
+    <li><strong>它用同一段話講「不同版本」的規範</strong> — 你問 ASCE 7,它的答案裡有些條文像 7-16、有些像 7-22。<span style="color: var(--ink-mute);">→ 要明確指定版本重問一次。</span></li>
+    <li><strong>答案裡夾雜陌生的用詞</strong> — 「砼」「樓蓋」「框架」「標號」「屈服強度」這類對岸用詞。<span style="color: var(--ink-mute);">→ 對外文件用台灣慣用詞:混凝土、樓板、構架、強度、降伏強度。</span></li>
+    <li><strong>你提出一個判斷,Claude 馬上同意你</strong> — 沒提出任何疑慮、沒問你前提、沒講限制條件。<span style="color: var(--ink-mute);">→ 它可能在討好你。試著反過來問:「這個判斷可能有什麼問題?」</span></li>
+    <li><strong>答案太完整、太流暢、什麼都包到了</strong> — 沒有「這個我不確定」「這個要查」「這個有例外」的痕跡。<span style="color: var(--ink-mute);">→ 真實的專業判斷不會這麼乾淨。問它「這個方法什麼情況下不適用?」</span></li>
+  </ul>
+
+  <div class="callout gold">
+    <div class="cl-label">使用心法</div>
+    <div class="cl-body">
+      <strong>把 Claude 當成一個聰明的新人</strong> — 你不會把新人寫的東西直接當報告交出去,你會看過、會挑、會問他「你這段哪裡來的」。對 Claude 用同樣的態度,就不會吃大虧。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">05</span>
+    <h3>不該用 AI 做的事</h3>
+  </div>
+
+  <p>下面這份清單分兩塊:<strong>絕對禁止</strong>(不能做的事)和<strong>該謹慎</strong>(可以做、但要多一道檢查)。完整版規章在另一份文件,這裡是<strong>工作時要記得的精簡版</strong>。</p>
+
+  <div class="subsection-head">🚫 絕對禁止</div>
+  <ol class="rule-list">
+    <li><strong>不可把 AI 產出的內容直接當成簽證文件提交。</strong> AI 是輔助,簽證責任永遠在工程師身上。對外有法律效力的文件,必須由工程師完整審視、確認、簽證。</li>
+    <li><strong>不可繞過 Project 直接把案件資料塞進對話。</strong> 重要案件資料要放在 Project 知識庫裡,不要散落在對話歷史。對話會被 30 天清除,知識庫才會留下來。</li>
+    <li><strong>不可用 AI 產出對外正式文件後直接送出。</strong> 至少要人工通讀一遍,確認沒有對岸用詞、沒有編造的引用、沒有不合理的判斷。</li>
+  </ol>
+
+  <div class="subsection-head">⚠️ 該謹慎</div>
+  <ol class="rule-list caution">
+    <li><strong>規範條號、文獻名稱、論文出處</strong> — AI 引用的任何條號和出處,送出前必須回查原文。</li>
+    <li><strong>數字計算</strong> — AI 算的數字一律當「初算」。正式報告數字必須人工驗算。</li>
+    <li><strong>對岸用詞</strong> — AI 中文輸出常夾雜對岸用詞(屈服、砼、樓蓋、框架等),對外文件要人工校對。</li>
+    <li><strong>規範版本</strong> — AI 可能混淆不同版本的規範條文(如 ASCE 7-16 vs 7-22),問問題時要明確指定版本,並回查原文。</li>
+    <li><strong>跨案件參照</strong> — 不要在 A 案的對話中提到 B 案的具體資料,案件之間在 Claude 裡也要保持隔離。</li>
+  </ol>
+
+  <div class="callout danger" style="margin-top: 28px;">
+    <div class="cl-label">核心鐵則</div>
+    <div class="cl-body">
+      <strong>Claude 裡的永遠是副本,正本一定留在公司既有檔案系統。</strong><br><br>
+      Project 知識庫裡的檔案,正本必須在公司網路磁碟、雲端硬碟等公司既有檔案系統裡。Claude Project 是「<strong>工作脈絡暫存區</strong>」,不是「資料儲存地」。員工離職、帳號移除,Claude 裡的東西可能拿不回來 — 但只要正本在公司,就沒有實質損失。
+    </div>
+  </div>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">PART 1 · KEY TAKEAWAYS</div>
+  <h4>讀完第一篇,你應該記住這四件事</h4>
+  <p><strong>1. AI 是會生答案的助理,不是會給正確答案的工具。</strong> 它的肯定語氣不等於答案可信。</p>
+  <p><strong>2. Google 用來找「存在的東西」,Claude 用來想清楚「一個問題」。</strong> 兩個工具不互相取代。</p>
+  <p><strong>3. 三種出錯模式 — 會討好、會編造、會混淆。</strong> 看到對應訊號,要停下來懷疑。</p>
+  <p><strong>4. Claude 裡的永遠是副本。</strong> 正本留在公司既有檔案系統。</p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===                PART 2 · 怎麼問                === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="part2">
+  <div class="pn">PART 2 · HOW TO ASK</div>
+  <h2>第二篇 · 怎麼問</h2>
+  <p class="part-lead">
+    Claude 強不強,有 70% 取決於你怎麼問。
+    這一篇不是「prompt 技巧大全」,因為對你來說那不重要。重要的是兩件事:認識「<strong>問問題的三個層級</strong>」、以及看「<strong>同一個工作、爛問法 vs 好問法</strong>」拿到的答案差多少。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">06</span>
+    <h3>三層 prompt 能力</h3>
+  </div>
+
+  <p>網路上一堆人在教「prompt 工程」、教「角色扮演法」、教「思考鏈」。對你的工作來說,<strong>那些都不重要</strong>。你只要把握三層基本能力,Claude 給你的答案品質就會大幅拉高。</p>
+
+  <div class="level-card">
+    <div class="lv-head">
+      <span class="lv-num">LEVEL 01</span>
+      <span class="lv-title">把問題講清楚</span>
+    </div>
+    <div class="lv-body">
+      這不是 prompt 技巧,是「描述能力」。問題本身要說清楚:你要解決什麼?你要 Claude 給你什麼樣的東西?<br><br>
+      ❌「幫我看一下這個」(這個是啥?要看什麼?)<br>
+      ✅「這份施工規範草稿,幫我檢查格式是否符合公共工程委員會的撰寫格式」<br><br>
+      <strong>這層極度重要</strong>。其實你會發現,90% 的「Claude 答不好」是因為你問題沒講清楚 — 不是 Claude 不夠強。
+    </div>
+  </div>
+
+  <div class="level-card">
+    <div class="lv-head">
+      <span class="lv-num">LEVEL 02</span>
+      <span class="lv-title">給脈絡</span>
+    </div>
+    <div class="lv-body">
+      多講一句「<strong>你為什麼問</strong>」,Claude 答案的精準度差很多。<br><br>
+      ❌「翻譯這段」<br>
+      ✅「這是 ASCE 7-22 隔震章節,我在做台灣規範比對的文件,翻譯時保留專業術語的英文原文(放括號)」<br><br>
+      <strong>這層滿重要</strong>,但教法很簡單 — 不是學技巧,是養習慣:<strong>多講一句你為什麼問、要拿來做什麼用</strong>。Claude 會自動調整答案的深度和形式。
+    </div>
+  </div>
+
+  <div class="level-card" style="border-left-color: var(--ink-light);">
+    <div class="lv-head">
+      <span class="lv-num" style="color: var(--ink-mute);">LEVEL 03</span>
+      <span class="lv-title" style="color: var(--ink-mute);">角色扮演、思考鏈、few-shot、結構化指令</span>
+    </div>
+    <div class="lv-body">
+      這就是 Threads 上一堆人在教的「prompt 工程」。<br><br>
+      <strong>對你來說,這層大概沒那麼重要了。</strong> 現在的 Claude 不需要你下「你是一個資深結構工程師」這種角色咒語就會給專業答案 — 它從你問題的內容就會自動調整。Few-shot 和思考鏈這些技巧,對非常複雜的任務還有用,但你的日常工作大多用不到。<br><br>
+      <em>有興趣可以查,但別花太多時間。</em>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="cl-label">真正的成長路徑</div>
+    <div class="cl-body">
+      不要花時間「學 prompt 技巧」,要花時間練 <strong>Level 01 + Level 02</strong>:把問題講清楚、多講一句脈絡。這兩件事熟練了,你拿到的答案品質就會比 90% 的人好。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">07</span>
+    <h3>對照組 · 同一個工作、爛問法 vs 好問法</h3>
+  </div>
+
+  <p>這一節是這篇最重要的部分。我用四組對照,讓你直觀看到「<strong>怎麼問</strong>」造成的答案差距。每組都是結構工程師會遇到的真實場景。</p>
+
+  <div class="subsection-head">對照組 1 · 規範比對</div>
+  <div class="two-col">
+    <div class="col bad">
+      <div class="col-label">爛問法</div>
+      <div class="col-text">
+        「ASCE 7 和台灣耐震規範差在哪?」<br><br>
+        <strong>Claude 會給:</strong>一段籠統的整體性比較,可能涵蓋目的、適用範圍、編寫機構等表面差異。<strong>對你工作沒有直接用處。</strong>
+      </div>
+    </div>
+    <div class="col good">
+      <div class="col-label">好問法</div>
+      <div class="col-text">
+        「我在做隔震建築設計,需要比對 ASCE 7-22 § 17 和台灣耐震規範 § 9 在 Prototype Test 的加載順序與合格判定上的差異。請列表對照,並保留兩邊的原文條號。」<br><br>
+        <strong>Claude 會給:</strong>逐項對照表,直接可用於審查回覆或內部文件。
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">對照組 2 · 翻譯</div>
+  <div class="two-col">
+    <div class="col bad">
+      <div class="col-label">爛問法</div>
+      <div class="col-text">
+        「翻這段。」 [貼上一段 RIDO 軟體說明書]<br><br>
+        <strong>Claude 會給:</strong>逐字翻譯,專業術語可能被翻成不符工程慣例的中文(例如把 "active earth pressure" 翻成「活動土壓」而不是「主動土壓」)。
+      </div>
+    </div>
+    <div class="col good">
+      <div class="col-label">好問法</div>
+      <div class="col-text">
+        「這是 RIDO 軟體說明書的開挖支撐章節,我要拿來給沒用過這軟體的同事看。翻譯時:(1) 大地工程術語用台灣慣用譯名;(2) 軟體變數名(如 P_active)保留英文,後面括號註中文意思;(3) 用台灣中文,不要對岸用詞。」<br><br>
+        <strong>Claude 會給:</strong>同事可以直接讀懂、不需要二次校對的版本。
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">對照組 3 · 技術討論</div>
+  <div class="two-col">
+    <div class="col bad">
+      <div class="col-label">爛問法</div>
+      <div class="col-text">
+        「不等高雙塔該用一個模型還是兩個?」<br><br>
+        <strong>Claude 會給:</strong>列出兩種做法的優缺點,可能不偏不倚地給你「看情況」的答案。<strong>你還是不知道該怎麼選。</strong>
+      </div>
+    </div>
+    <div class="col good">
+      <div class="col-label">好問法</div>
+      <div class="col-text">
+        「我這個案子是 45F + 32F 不等高雙塔,共用 B6F 和 5F 以下裙樓。我傾向建單一整體模型。請告訴我:(1) 這個判斷在學術文獻上是否有共識;(2) 如果有 case study 可以佐證,請給出處;(3) 週期取值時,該以較高塔為基準還是綜合判斷?」<br><br>
+        <strong>Claude 會給:</strong>有立場的答案 + 文獻支持 + 具體操作建議。可以直接寫進策略備忘錄。
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">對照組 4 · 審查意見回覆</div>
+  <div class="two-col">
+    <div class="col bad">
+      <div class="col-label">爛問法</div>
+      <div class="col-text">
+        「幫我回這個審查意見。」 [貼上意見]<br><br>
+        <strong>Claude 會給:</strong>制式的官方語氣回覆,可能缺乏關鍵技術佐證,或語氣過於低聲下氣。
+      </div>
+    </div>
+    <div class="col good">
+      <div class="col-label">好問法</div>
+      <div class="col-text">
+        「以下是台北市建管處對我案的審查意見三條。背景:這是 23F RC 集合住宅,基地位於四號公園旁。請以結構技師專業回覆口吻草擬回覆,每條意見:(1) 先說明我們的設計依據;(2) 引用相關規範條號(我會回查);(3) 必要時提出後續補件方向。」<br><br>
+        <strong>Claude 會給:</strong>專業、有依據、可送審的草稿。你只需校對和加上案件編號。
+      </div>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <div class="cl-label">這四組的共通模式</div>
+    <div class="cl-body">
+      好問法都包含三件事:<strong>(1) 你的具體情境</strong>(案號、條件、限制)、<strong>(2) 你要什麼形式的答案</strong>(列表、草稿、佐證)、<strong>(3) 你的偏好或排除</strong>(用台灣中文、保留原文、特定格式)。<br><br>
+      不需要學「prompt 技巧」 — 只要養成「<strong>多講一句</strong>」的習慣就好。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">08</span>
+    <h3>規範查詢</h3>
+  </div>
+
+  <p>規範查詢是結構工程師最高頻的需求之一。Claude 在這塊強,但也是<strong>編造條號最常發生的地方</strong> — 所以要建立一套查詢 SOP。</p>
+
+  <div class="subsection-head">規範查詢 SOP</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">問問題時明確指定規範版本</div>
+        <div class="step-text">不要只說「ASCE 7」,要說「ASCE 7-22」。不要只說「耐震規範」,要說「<strong>內政部 110 年版耐震設計規範</strong>」。版本指定可以大幅減少混淆。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">要求 Claude 標明條號</div>
+        <div class="step-text">問題後面加一句:「<strong>請註明每個論點對應的條號</strong>」。這樣你可以一條一條回查,不會有條號被「藏」在文字裡。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">回查原文</div>
+        <div class="step-text">拿到答案後,打開規範 PDF,用搜尋功能找對應條號。對得上 → 採用;對不上(條號不存在、或條號內容跟 Claude 講的不一樣) → 棄用,重問。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">把規範 PDF 上傳到 Project 知識庫</div>
+        <div class="step-text">如果常用某幾本規範,直接把 PDF 上傳到你的個人 Project 知識庫。之後在這個 Project 內問規範問題,Claude 會優先讀知識庫裡的條文 — <strong>編造率大幅下降</strong>。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="cl-label">最高頻提醒</div>
+    <div class="cl-body">
+      <strong>任何條號,送出正式文件前都要回查。</strong> 這個動作只要 30 秒,可以避免大幅的專業失誤。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">09</span>
+    <h3>翻譯</h3>
+  </div>
+
+  <p>翻譯是 Claude 很強的應用 — 而且結構工程師有大量英文、日文技術文件要處理(ASCE、JIS、ISO、廠商說明書)。</p>
+
+  <div class="subsection-head">翻譯的關鍵原則</div>
+  <ul class="signal-list">
+    <li><strong>明確說「台灣用詞」。</strong> 否則 Claude 容易夾雜對岸用詞。</li>
+    <li><strong>專業術語要求保留原文。</strong> 例如「base shear (基底剪力)」、「P-Delta 效應」 — 結構工程師看英文比看中文翻譯更精準。</li>
+    <li><strong>長文件分段處理。</strong> 一次貼太長,Claude 可能漏譯或精簡。建議一次一節。</li>
+    <li><strong>翻譯後請 Claude 自己檢查。</strong> 翻完後問一句「<strong>請檢查這份翻譯有沒有專業術語的中文翻得不精準的地方</strong>」 — 它常會自己發現問題。</li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">10</span>
+    <h3>技術討論</h3>
+  </div>
+
+  <p>這是 Claude 最有顧問價值的應用 — 把它當「<strong>隨叫隨到的資深工程師</strong>」,用來釐清你的判斷。</p>
+
+  <div class="subsection-head">技術討論的進入方式</div>
+  <ul class="signal-list">
+    <li><strong>先講你的判斷,再問 Claude 怎麼看。</strong> 不要直接問「該怎麼做」 — 那會得到通用答案。先講你的想法,問 Claude:「<strong>這個判斷有什麼盲點?</strong>」</li>
+    <li><strong>要它扮演「找碴的人」。</strong> 加一句:「<strong>請挑這個方案的問題,而不是順著我講</strong>」 — 直接抵消討好傾向。</li>
+    <li><strong>要它給文獻佐證。</strong> 任何專業判斷,問:「<strong>有什麼國內外文獻支持/反對這個做法?</strong>」記得文獻要回查(見 PIT 03)。</li>
+    <li><strong>反覆迭代。</strong> 不要期待一次拿到完整答案。技術討論本來就是來回的過程 — 跟 Claude 也一樣。</li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">11</span>
+    <h3>搜尋型問題</h3>
+  </div>
+
+  <p>這是最容易跟 Google 混淆的場景。再強調一次:</p>
+
+  <div class="callout">
+    <div class="cl-label">場景判斷</div>
+    <div class="cl-body">
+      <strong>「找一個存在的東西」</strong> → Google(規範 PDF 下載點、廠商網頁、產品規格)<br>
+      <strong>「整理一個主題的資訊」</strong> → Claude(這個主題的常見做法、各家比較、優劣分析)
+    </div>
+  </div>
+
+  <p>但有個重要例外:<strong>Claude 也可以做網路搜尋</strong>(它有 web_search 工具)。當你問的是「最新的 XXX」、「2024 年的 XXX」這類時效性問題,Claude 會主動上網查 — 比起 Google,它的優勢是「<strong>查完直接整理給你</strong>」,不用你自己讀十個網頁。</p>
+
+  <p>實務建議:把 Google 用來「快查單一資訊」,把 Claude 用來「整理多來源資訊」。兩個工具不衝突。</p>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">PART 2 · KEY TAKEAWAYS</div>
+  <h4>讀完第二篇,你應該記住這四件事</h4>
+  <p><strong>1. Level 01 + Level 02 才是重點。</strong> 把問題講清楚 + 多講一句脈絡 — 比學任何 prompt 技巧都有用。</p>
+  <p><strong>2. 好問法包含三件事:</strong>具體情境 + 答案形式 + 你的偏好或排除。</p>
+  <p><strong>3. 規範查詢一定要回查條號。</strong> 編造率最高的就是這塊。</p>
+  <p><strong>4. 技術討論時要「先講判斷再問」,並要 Claude 扮演找碴的人。</strong> 這樣可以抵消討好傾向。</p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===                 PART 3 · 累積                 === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="part3">
+  <div class="pn">PART 3 · ACCUMULATION</div>
+  <h2>第三篇 · 累積</h2>
+  <p class="part-lead">
+    一般人用 Claude 最大的浪費,是「每次都從頭講」 — 開新對話、講脈絡、問問題、得到答案、關掉。下次再開新對話、再從頭講一次。
+    這篇要教你怎麼用 <strong>Project</strong> 把 Claude 從「即時問答機」升級成「<strong>有記憶的助手</strong>」 — 它會記得你公司的規範、你的偏好、你的案件脈絡。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">12</span>
+    <h3>個人 Project 建置</h3>
+  </div>
+
+  <p>Project 是 Claude 提供的「<strong>工作空間</strong>」概念 — 你在 Project 裡開的所有對話,共享同一份<strong>知識庫</strong>(你上傳的文件、你設定的指示)和上下文。</p>
+
+  <div class="subsection-head">為什麼要用 Project</div>
+  <ul class="signal-list">
+    <li><strong>知識庫一勞永逸。</strong> 你把常用規範 PDF 上傳一次,之後所有對話都讀得到。不用每次重貼。</li>
+    <li><strong>偏好設定一次,後面都沿用。</strong> 例如「用台灣中文」「保留專業術語英文」 — 設在 Project 指示,所有對話自動套用。</li>
+    <li><strong>對話可以隨意開新的。</strong> 因為脈絡在 Project,不在單一對話。<strong>新對話 ≠ 失去脈絡</strong>。</li>
+  </ul>
+
+  <div class="subsection-head">建立 Project 的步驟</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">想清楚這個 Project 的用途</div>
+        <div class="step-text">不要建一個「萬用 Project」 — 那會什麼都裝、什麼都做不好。建議按<strong>主題</strong>切分:例如「規範查詢」「審查回覆」「文獻翻譯」「個案 A 工作區」。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">在 Claude 介面點「New Project」</div>
+        <div class="step-text">輸入 Project 名稱、簡短描述。<strong>名稱用得到的、有辨識度的</strong>,避免「測試」「未命名」這種日後找不到的名字。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">設定 Project 指示(Instructions)</div>
+        <div class="step-text">這是 Project 最重要的部分。寫清楚:你是誰、你在做什麼、Claude 該怎麼幫你、有什麼語言/格式偏好。範本見下方。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">上傳知識庫文件</div>
+        <div class="step-text">把常用的規範 PDF、公司範本、過去寫過的範例文件 — 任何你希望 Claude 「永遠讀得到」的東西 — 上傳到知識庫。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">5</div>
+      <div class="step-body">
+        <div class="step-title">開新對話,試試看</div>
+        <div class="step-text">在 Project 內開新對話,問一個和知識庫有關的問題。如果 Claude 引用了知識庫的內容,就成功了。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">Project 指示範本</div>
+  <div class="quote-block">
+    我是築遠工程顧問的結構工程師,主要做高層 RC 集合住宅、辦公棟、地下開挖支撐案的設計。<br><br>
+    這個 Project 是用來「<strong>○○○○○</strong>」 (例如:規範查詢與比對 / 審查意見回覆草擬 / 雙塔案的策略討論)。<br><br>
+    協作時請遵守:<br>
+    (1) 中文回答一律用台灣慣用語,不要用對岸用詞(屈服→降伏、樓蓋→樓板、框架→構架、砼→混凝土)<br>
+    (2) 引用任何規範條號或文獻,請明確標示出處<br>
+    (3) 牽涉專業判斷時,請主動指出限制條件或例外情境,不要只給「通用答案」<br>
+    (4) 如果我的前提條件本身有問題,請先指出來再回答<br>
+    (5) 重要英文專業術語請保留原文(放在括號中)
+  </div>
+
+  <div class="callout">
+    <div class="cl-label">小提醒</div>
+    <div class="cl-body">
+      <strong>Project 指示不是寫一次就完美的。</strong> 用一段時間後,你會發現「啊原來 Claude 還是會犯某類錯」 — 那就把對應的指示加進去。Project 指示是<strong>逐步累積的個人化設定</strong>。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">13</span>
+    <h3>共用 Project + 「只放副本」鐵則</h3>
+  </div>
+
+  <p>個人 Project 是「<strong>我的</strong>」工作空間。共用 Project 是「<strong>我們的</strong>」 — Claude Team 方案允許你把 Project 分享給同事,讓多人共用同一份知識庫和指示。</p>
+
+  <div class="subsection-head">共用 Project 適合什麼場景</div>
+  <ul class="signal-list">
+    <li><strong>多人合作的案件</strong> — 例如 A 案有 3 個工程師同時在做,大家共用一份案件知識庫(基地資料、業主回覆、會議紀錄)</li>
+    <li><strong>公司範本知識庫</strong> — 公司的標準規範庫、型鋼資料庫、計算公式庫,所有人共用</li>
+    <li><strong>跨單位協作</strong> — 結構部 + 大地部共同處理的案件</li>
+  </ul>
+
+  <div class="subsection-head">共用 Project 的權限模型</div>
+  <p>Claude Team 方案的共用 Project 是「<strong>一個擁有者 + 多個被授權的成員</strong>」:</p>
+
+  <ul class="signal-list">
+    <li><strong>擁有者(Owner)</strong>:可以改 Project 設定、知識庫、邀請/移除成員</li>
+    <li><strong>編輯者(Editor)</strong>:可以使用 + 修改知識庫</li>
+    <li><strong>使用者(Member)</strong>:可以使用 Project,但不能改設定</li>
+  </ul>
+
+  <p><strong>關鍵限制:擁有權綁定個人帳號,不容易轉移。</strong> 如果擁有者離職,Project 雖然還在,但要交接給其他人需要重建。</p>
+
+  <div class="callout danger">
+    <div class="cl-label">最重要的鐵則 — 再強調一次</div>
+    <div class="cl-body">
+      <strong>Claude 裡的永遠是副本,正本一定留在公司既有檔案系統。</strong><br><br>
+      共用 Project 知識庫裡的所有檔案,正本必須在公司網路磁碟、Google Drive 或公司既有檔案系統。Claude Project 是<strong>工作脈絡的暫存區</strong>,不是資料儲存地。<br><br>
+      員工離職、帳號被移除、Project 被誤刪 — 這些情況下 Claude 裡的東西可能拿不回來。但只要正本在公司,就沒有實質損失。
+    </div>
+  </div>
+
+  <div class="subsection-head">建立共用 Project 的注意事項</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">先確認用途有持續性</div>
+        <div class="step-text">不要為了「一次性的小協作」開共用 Project。共用 Project 適合<strong>長期、多人、跨對話</strong>使用的場景。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">指定擁有者 + 副擁有者</div>
+        <div class="step-text">擁有者最好是<strong>較資深、不易異動的同仁</strong>。同時找一位副擁有者(設為 Editor),避免單點故障。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">所有知識庫文件必須是「副本」</div>
+        <div class="step-text">所有上傳的檔案,正本必須在公司網路磁碟或 Google Drive。Project 知識庫只放<strong>副本</strong>。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">定期同步</div>
+        <div class="step-text">如果某個正本檔案在公司網路磁碟被更新了,要同步更新 Project 知識庫裡的副本。否則 Claude 會讀到舊版資料。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    註:本節為共用 Project 的「規格說明 + 鐵則」版本。實戰經驗(常見問題、權限轉移踩坑等)會在後續版本補充。
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">14</span>
+    <h3>範本 Project 的複製和使用</h3>
+  </div>
+
+  <p>公司會建立一些「<strong>範本 Project</strong>」 — 由資深同仁建好、設定好指示、上傳好標準知識庫,然後設為「<strong>公開唯讀</strong>」,給所有人複製到自己帳號下使用。</p>
+
+  <p>這是 Claude Team 方案的官方推薦做法 — 因為個人 Project 的擁有權綁定個人帳號,如果直接「共用」會卡在擁有權轉移問題。<strong>「公開唯讀範本 + 每人複製一份」</strong>避開了這個問題。</p>
+
+  <div class="subsection-head">複製範本 Project 的步驟</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">進入公司範本 Project</div>
+        <div class="step-text">公司會在內部公告範本 Project 的連結。點進去後,你會看到一個「唯讀」狀態的 Project。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">點「Copy Project」</div>
+        <div class="step-text">Claude 介面提供複製按鈕。複製後,一份相同設定、相同知識庫的 Project 會出現在你自己帳號下,擁有者是你。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">改成你自己的版本</div>
+        <div class="step-text">複製後就是你的了,可以隨意加減指示、增刪知識庫。你的修改不會影響原本的範本。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="cl-label">為什麼用範本而不直接共用</div>
+    <div class="cl-body">
+      共用 Project 適合「<strong>一起做同一件事</strong>」(同一個案件、同一份文件)。<br>
+      範本 Project 適合「<strong>每人做自己的事,但出發點一致</strong>」(規範庫、撰寫風格、計算公式) — 這個情境更普遍。
+    </div>
+  </div>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">PART 3 · KEY TAKEAWAYS</div>
+  <h4>讀完第三篇,你應該記住這四件事</h4>
+  <p><strong>1. Project 把 Claude 從「即時問答機」升級成「有記憶的助手」。</strong> 不開新對話就重貼脈絡,是浪費。</p>
+  <p><strong>2. Project 指示是逐步累積的個人化設定。</strong> 用一陣子後會越來越貼合你。</p>
+  <p><strong>3. 共用 Project 適合多人合作的案件;範本 Project + 複製,適合「出發點一致、各做各的」。</strong></p>
+  <p><strong>4. 鐵則:Claude 裡的永遠是副本,正本留在公司既有檔案系統。</strong></p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===              PART 4 · 進階 A · 文書產出       === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="part4">
+  <div class="pn">PART 4 · ADVANCED USE A · DOCUMENT PRODUCTION</div>
+  <h2>第四篇 · 進階運用 A · 文書產出</h2>
+  <p class="part-lead">
+    這一篇是大部分人會用到的「進階」 — 不是寫程式、不是做工具,是<strong>把日常文書工作的時間壓到三分之一</strong>。
+    用實際案例展示三個高頻場景:審查回覆、資料比較、Claude for Office。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">15</span>
+    <h3>審查意見回覆整理</h3>
+  </div>
+
+  <p>結構工程師高頻、重複性高的文書工作。Claude 在這塊壓縮率非常顯著 — <strong>原本 3-4 小時的工作,可以壓到 15-20 分鐘</strong>。</p>
+
+  <div class="case-card">
+    <div class="case-head">
+      <div class="case-tag">CASE STUDY 01</div>
+      <div class="case-title">用 Claude 處理三基地審查意見</div>
+    </div>
+    <div class="case-body">
+      <p><strong>背景</strong>:某統包案有三個基地,各收到 8-12 條審查意見,需要逐條回覆。</p>
+      <p><strong>沒有 AI 的做法</strong>:每條意見人工讀懂 → 查設計依據 → 草擬回覆 → 自己潤稿。每基地約 4 小時,三基地共 12 小時。</p>
+      <p><strong>用 Claude 的做法</strong>:</p>
+      <p>
+        1. 把三基地的設計簡報、計算書摘要、過去類似案件的審查回覆放進 Project 知識庫<br>
+        2. 把這次三基地的審查意見整理成一份文件,上傳<br>
+        3. 跟 Claude 說:「請以結構技師專業回覆口吻,為這三基地的審查意見草擬回覆。每條意見:(1) 引用我們的設計依據;(2) 標明對應的規範條號;(3) 必要時提出補件方向。」<br>
+        4. 拿到草稿後,人工逐條校對、補上正確的案號和簽核資訊
+      </p>
+      <p><strong>實際時間</strong>:三基地總共約 45 分鐘(每基地 15 分鐘)。<strong>壓縮率約 6%</strong>。</p>
+    </div>
+  </div>
+
+  <div class="subsection-head">審查回覆的關鍵技巧</div>
+  <ul class="signal-list">
+    <li><strong>讓 Claude 看你以前的回覆風格。</strong> 上傳幾份過去的審查回覆當範本 — Claude 會自動模仿你的語氣和結構。</li>
+    <li><strong>條號要回查。</strong> Claude 引用的規範條號可能是編的,送審前一定要查。</li>
+    <li><strong>政策性議題不要讓 Claude 答。</strong> 如果意見涉及「業主溝通策略」「成本取捨」「法律風險」 — 自己寫。Claude 只適合處理「<strong>技術依據說明</strong>」型的回覆。</li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">16</span>
+    <h3>比較資料(規範比對、版本盤點)</h3>
+  </div>
+
+  <p>跨規範比對、跨版本盤點 — 這類工作 Claude <strong>不只快,而且能做出個人手工做不出的品質</strong>(跨語言、跨國規範同時比對)。</p>
+
+  <div class="case-card">
+    <div class="case-head">
+      <div class="case-tag">CASE STUDY 02</div>
+      <div class="case-title">隔震墊試驗規定四國比對</div>
+    </div>
+    <div class="case-body">
+      <p><strong>背景</strong>:某案隔震設計,需要回應業主問:「Prototype Test 與 Qualification Test 的試驗規定,台灣、美國、日本、紐西蘭/ISO 各有什麼差異?」</p>
+      <p><strong>沒有 AI 的做法</strong>:跨語言查 ASCE 7-22、JIS、ISO 原文 → 整理對照表 → 約需 2-3 個工作天,且即使花這麼久,也只能做出局部、不全面的版本。</p>
+      <p><strong>用 Claude 的做法</strong>:</p>
+      <p>
+        1. 在 Project 指示中明確背景(我在做隔震設計、需要四國比對、要拿來回業主)<br>
+        2. 問:「請整理台灣耐震規範 § 9.5、ASCE 7-22 § 17、日本耐震規定、紐西蘭/ISO 隔震標準中,Prototype Test 與 Qualification Test 的加載速度、加載順序、合格判定差異。請列表對照,保留原文條號。」<br>
+        3. 拿到對照表後,逐項回查原文條號<br>
+        4. 把核對過的版本作為業主回覆的附件
+      </p>
+      <p><strong>實際時間</strong>:約 60 分鐘(含回查條號)。<strong>壓縮率約 5%</strong>。而且品質比手工版好 — 因為 Claude 同時處理四種語言、跨規範整合。</p>
+    </div>
+  </div>
+
+  <div class="subsection-head">比較資料的關鍵技巧</div>
+  <ul class="signal-list">
+    <li><strong>明確列出「要比較的維度」。</strong> 不要說「比較這幾本規範」,要說「比較加載速度、加載順序、合格判定」 — 維度越具體,答案越有用。</li>
+    <li><strong>要求表格輸出。</strong> 跨規範比較直接做成表格,後續修改和引用都方便。</li>
+    <li><strong>逐項回查。</strong> 跨語言比對的條號特別容易編造,每一項都要查原文。</li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">17</span>
+    <h3>Claude for Excel / Word / PowerPoint</h3>
+  </div>
+
+  <p>
+    除了 Claude 網頁版,Anthropic 也提供「<strong>Claude for Office</strong>」 — 可以直接在 Excel、Word、PowerPoint 裡呼叫 Claude,不用切視窗、不用複製貼上。
+  </p>
+
+  <div class="callout warn">
+    <div class="cl-label">先決條件</div>
+    <div class="cl-body">
+      <strong>需搭配 Microsoft 365 訂閱版才能使用</strong>(Office 2010、2016、2019 等買斷版不支援)。請先確認你電腦的 Office 是否符合 — 詳細的版本支援、安裝步驟與適合場景,見<strong>附錄 § D</strong>。
+    </div>
+  </div>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">PART 4 · KEY TAKEAWAYS</div>
+  <h4>讀完第四篇,你應該記住這三件事</h4>
+  <p><strong>1. 審查回覆和規範比對是壓縮率最高的兩塊工作。</strong> 從工作天壓到小時,從不可能壓到可行。</p>
+  <p><strong>2. 跨語言、跨規範比對 — Claude 不只是快,是讓「原本不可行的工作變成可行」。</strong></p>
+  <p><strong>3. Claude for Office 需 Microsoft 365 訂閱版才能用。</strong> 細節見附錄 § D。</p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===           PART 5 · 不同職位的應用場景          === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="part5">
+  <div class="pn">PART 5 · USE BY ROLE</div>
+  <h2>第五篇 · 不同職位的應用場景</h2>
+  <p class="part-lead">
+    前面四篇是<strong>通用</strong>內容,適用於每位同仁。這篇針對<strong>繪圖工程師、財務及行政人員、工務工程師</strong>三個職位,
+    具體說明日常工作裡的應用場景與注意事項。每個職位的內容彼此獨立,可以只讀和自己相關的部分。
+  </p>
+</div>
+
+<!-- === 15A · 繪圖工程師 === -->
+<section class="section">
+  <div class="section-head">
+    <span class="sn">15A</span>
+    <h3>繪圖工程師</h3>
+  </div>
+
+  <p>
+    繪圖工程師的工作離「工程簽證責任」較遠,但離「<strong>每天大量重複動作</strong>」很近。AI 主要幫你的不是設計判斷,而是<strong>把重複動作壓縮成幾分鐘</strong>。
+  </p>
+
+  <div class="subsection-head">主要應用場景</div>
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 28%;">場景</th>
+        <th>怎麼用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dim">CAD 操作排解</td>
+        <td class="lhs">「快捷鍵設定怎麼改」「這個圖層管理問題怎麼處理」「標註樣式哪裡修改」 — 比問 Google 快,而且 Claude 可以追問細節。</td>
+      </tr>
+      <tr>
+        <td class="dim">修改說明翻譯</td>
+        <td class="lhs">工程師寫的英文修改註記、外籍合作對象的圖檔說明,翻成中文時保留原文夾註。</td>
+      </tr>
+      <tr>
+        <td class="dim">圖檔目錄整理</td>
+        <td class="lhs">大量圖檔的清單整理、命名規則建議、檔案排序的合理性檢查。</td>
+      </tr>
+      <tr>
+        <td class="dim">規格表整理</td>
+        <td class="lhs">配筋表、型鋼表的格式套用、欄位整合、跨表合併。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">注意事項</div>
+  <div class="callout danger">
+    <div class="cl-label">繪圖工程師專屬警示</div>
+    <div class="cl-body">
+      <strong>圖面內容不能自己決定。</strong> Claude 講的「這個地方應該畫成 XX」即使對,也要先找工程師確認後再畫。<br><br>
+      <strong>施工圖細部尺寸不要自己問 AI。</strong> 鋼筋彎鉤、混凝土保護層、連接配筋 — 這些是工程師的簽證範圍,有問題請工程師回答,不要自己問 AI。
+    </div>
+  </div>
+
+  <ul class="signal-list">
+    <li><strong>CAD 操作問題比較安全。</strong> 純技術操作的問題,Claude 答錯也不會造成設計責任 — 但設計相關的細節要由工程師決定。</li>
+    <li><strong>翻譯不會出大事,但「對岸用詞」要注意。</strong> 翻譯結果若要寫進圖說,請先掃過用詞(見 PIT 04)。</li>
+  </ul>
+</section>
+
+<!-- === 15B · 財務及行政 === -->
+<section class="section">
+  <div class="section-head">
+    <span class="sn">15B</span>
+    <h3>財務及行政人員</h3>
+  </div>
+
+  <p>
+    財務及行政工作的特性是<strong>「資料散落、需要彙整」</strong> — 同樣的資訊散在 Excel、Word、信件、會議裡。AI 最能幫上忙的就是把這些散落的資訊「集中、分類、統計」成你要的形式。
+  </p>
+
+  <div class="subsection-head">主要應用場景</div>
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 28%;">場景</th>
+        <th>怎麼用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dim">文件統整</td>
+        <td class="lhs">把散落的多份文件(會議紀錄、業主來文、設計變更通知等)歸納成單一摘要 / 索引 / 重點清單 — 不用一份一份點開重看。</td>
+      </tr>
+      <tr>
+        <td class="dim">管理清單整合</td>
+        <td class="lhs">多份 Excel / 報表的資料合併、去重、分類 — 例如各案的「廠商聯絡資訊」「外發資料清單」整合成總表。</td>
+      </tr>
+      <tr>
+        <td class="dim">工時統計</td>
+        <td class="lhs">同仁回報的工時資料彙總、分析 — 例如某案 Q1 累積工時、各專案工時佔比、各同仁累計工時。</td>
+      </tr>
+      <tr>
+        <td class="dim">翻譯</td>
+        <td class="lhs">業主外語信件、外籍廠商來文。指定「用台灣中文」「保留專業術語英文」效果最好。</td>
+      </tr>
+      <tr>
+        <td class="dim">文件歸檔分類建議</td>
+        <td class="lhs">「這份文件該歸到哪一類」「目錄該怎麼編排」 — 給 Claude 看現有目錄結構,問它新文件該放哪。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">注意事項</div>
+  <div class="callout danger">
+    <div class="cl-label">財務及行政專屬警示</div>
+    <div class="cl-body">
+      <strong>業主資料、財務數字、合約內容</strong> — 上傳 AI 前先確認沒有保密義務。<br><br>
+      <strong>正式對外文件不可直接送出。</strong> Claude 整理的草稿一定要主管或工程師核可後才發。
+    </div>
+  </div>
+
+  <ul class="signal-list">
+    <li><strong>數字統計一定要驗算。</strong> 工時、預算、各種總和 — Claude 算的「初步數字」要對得起原始資料才能用。隨機抽幾筆對一下,或請 Excel 自己重算一次。</li>
+    <li><strong>多份檔案合併時,欄位對應容易出錯。</strong> 不同 Excel 的「廠商名稱」「案件編號」可能寫法不一,Claude 合併時可能誤對應。合併後務必檢查筆數和關鍵欄位。</li>
+    <li><strong>歸檔分類沒有「絕對對的答案」。</strong> Claude 的建議是參考,實際的歸檔規則仍以公司既有慣例為準。</li>
+  </ul>
+</section>
+
+<!-- === 15C · 工務工程師 === -->
+<section class="section">
+  <div class="section-head">
+    <span class="sn">15C</span>
+    <h3>工務工程師</h3>
+  </div>
+
+  <p>
+    工務工程師的工作介於「現場判斷」和「文書整理」之間。AI 不能取代你的<strong>現場判斷</strong>,但可以大幅壓縮文書整理的時間 — 讓你的精力留在現場。
+  </p>
+
+  <div class="subsection-head">主要應用場景</div>
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 28%;">場景</th>
+        <th>怎麼用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dim">施工查驗紀錄整理</td>
+        <td class="lhs">把現場巡查的零散筆記(語音轉文字、隨手寫的紙條)整理成正式查驗紀錄。</td>
+      </tr>
+      <tr>
+        <td class="dim">工地會議紀錄整理</td>
+        <td class="lhs">把錄音轉文字稿後,請 Claude 整理成正式會議紀錄格式。技術議題的敘述比一般行政會議複雜,需多一道校對。</td>
+      </tr>
+      <tr>
+        <td class="dim">承包商來文回覆</td>
+        <td class="lhs">工法變更、計價單、施工計畫書的回覆草稿。涉及計價、變更、責任歸屬時務必由主辦工程師確認。</td>
+      </tr>
+      <tr>
+        <td class="dim">規範查詢</td>
+        <td class="lhs">「這個施工步驟符合 XX 規範嗎」「這個養護要求對嗎」 — 答完一律回查原文(見 PIT 02)。</td>
+      </tr>
+      <tr>
+        <td class="dim">業主協調文件</td>
+        <td class="lhs">工地週報、月報、業主協調事項回覆 — 把零散資訊整理成業主可讀的格式。</td>
+      </tr>
+      <tr>
+        <td class="dim">照片整理</td>
+        <td class="lhs">大量現場照片的分類建議、報告中該放哪些。<strong>注意</strong>:Claude 看不到照片內容,只能依你描述判斷。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">注意事項</div>
+  <div class="callout danger">
+    <div class="cl-label">工務工程師專屬警示</div>
+    <div class="cl-body">
+      <strong>施工查驗的最終判斷在工務工程師本人。</strong> Claude 可協助整理紀錄,但「這項施工是否合格」由工務工程師親自判斷,不可問 AI。<br><br>
+      <strong>跟承包商的正式文件要特別謹慎。</strong> 涉及計價、變更、責任歸屬的文件,Claude 草擬後一律由主辦工程師核可後再發。
+    </div>
+  </div>
+
+  <ul class="signal-list">
+    <li><strong>規範條號要回查。</strong> 工務工程師跟工程師一樣,都會踩 PIT 02「編造條號」的坑。寫進正式查驗紀錄前先打開規範 PDF 對一下。</li>
+    <li><strong>不同案件的對話要分開。</strong> A 案的對話內容不要延續到 B 案 — 跨案件的脈絡混在一起,容易把資料寫錯。</li>
+    <li><strong>現場照片若有業主或第三方識別資訊,上傳前先確認。</strong> 照片中的人物、車牌、業主標示等,涉及隱私與保密。</li>
+  </ul>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">PART 5 · KEY TAKEAWAYS</div>
+  <h4>讀完第五篇,記住兩件事</h4>
+  <p><strong>1. 每個職位的核心應用不同,但風險原則相同。</strong> 涉及對外、涉及計算數字、涉及專業判斷的內容,都需要該領域的負責人核可後才能用。</p>
+  <p><strong>2. AI 不能取代你的「職位本份」。</strong> 繪圖工程師的圖面決策、財務及行政的對外送出責任、工務工程師的施工判斷 — 這些是你的本份,不能交給 AI。AI 是幫你壓縮時間的工具,不是取代責任的替身。</p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===              PART 6 · 進階 B · 工具開發        === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="part6">
+  <div class="pn">PART 6 · ADVANCED USE B · TOOL DEVELOPMENT</div>
+  <h2>第六篇 · 進階運用 B · 工具開發<span class="optional-tag">選讀</span></h2>
+  <p class="part-lead">
+    這篇是<strong>選讀</strong> — 對「<strong>想做出可重複使用的工具</strong>」有興趣的人。
+    示範用 Claude 寫 Excel 小工具、生成文件或網頁。即使你不寫程式,Claude 也可以幫你做出能用的東西。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">18</span>
+    <h3>用 Claude 寫 Excel 小工具</h3>
+  </div>
+
+  <p>結構工程師有很多「<strong>重複性高的計算</strong>」 — 斷面性質、配筋估算、撓度檢核、規範比對表。這些用 Excel + 公式或 VBA 寫成小工具,可以省下大量重複勞動。</p>
+
+  <p>過去要寫這種工具,得自己會 VBA。<strong>現在你不用會 — Claude 可以幫你寫</strong>。</p>
+
+  <div class="case-card">
+    <div class="case-head">
+      <div class="case-tag">CASE STUDY 03</div>
+      <div class="case-title">RC 牆 SSTM 模型 VBA 繪圖工具</div>
+    </div>
+    <div class="case-body">
+      <p><strong>背景</strong>:RC 牆設計常需要根據 ETABS PIER 力的結果,繪製 SSTM(Strut-and-Tie Model)模型。手繪一面牆約 30-45 分鐘,項目裡有十幾面牆就是半天的事。</p>
+      <p><strong>用 Claude 的做法</strong>:</p>
+      <p>
+        1. 跟 Claude 講清楚需求:「我要做一個 Excel 工具,輸入 PIER 力(N、V、M),自動在 Excel 上繪製 SSTM 模型(壓桿、拉桿配置 + 力流箭頭)」<br>
+        2. Claude 寫 VBA 巨集 + Excel 模板<br>
+        3. 我測試,告訴 Claude 哪裡不對(例如「箭頭方向反了」「拉桿應該是虛線」)<br>
+        4. Claude 修正<br>
+        5. 反覆迭代到可用
+      </p>
+      <p><strong>實際開發時間</strong>:約 26 條訊息(約 1.5 小時)。之後使用時,每面牆從 30 分鐘變 1 分鐘。</p>
+    </div>
+  </div>
+
+  <div class="subsection-head">不會寫程式也能寫工具的關鍵</div>
+  <ul class="signal-list">
+    <li><strong>你不需要懂程式碼,但要懂工具該做什麼。</strong> 你是領域專家,Claude 是程式專家 — 分工是「<strong>你定義需求和驗證結果,Claude 寫程式</strong>」。</li>
+    <li><strong>具體描述輸入和輸出。</strong> 「給我斷面尺寸,我要計算 I 值」太模糊;「輸入 b、h、d,輸出 I_g、I_eff、檢核 ACI 318 是否通過」就具體。</li>
+    <li><strong>用「測試 → 反饋 → 修正」的循環。</strong> 不要期待 Claude 一次寫出完美工具。用最小可運作版本開始,測試後告訴它哪裡不對。</li>
+    <li><strong>學會看程式碼長什麼樣,不一定要會寫。</strong> 你不會 VBA 沒關係,但要看得出「這段是計算」「這段是繪圖」 — 之後修改才方便。</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="cl-label">注意</div>
+    <div class="cl-body">
+      Claude 寫的計算工具,<strong>輸出結果一定要人工驗算</strong>。它可能寫對 80% 的邏輯、漏掉 20% 的邊界條件 — 必須抓出來。<br><br>
+      建議:用<strong>手算可驗證的簡單案例</strong>先測試,沒問題後才放到正式案件用。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">19</span>
+    <h3>生成文件或網頁</h3>
+  </div>
+
+  <p>Claude 可以直接生成 HTML 網頁、PDF、Word 文件 — 這對「<strong>內部報告、教育訓練材料、簡易工具介面</strong>」非常實用。</p>
+
+  <div class="subsection-head">三個常見的生成場景</div>
+
+  <ul class="signal-list">
+    <li><strong>互動式網頁(像你正在看的這份手冊)</strong> — 不用懂 HTML/CSS,Claude 直接寫,你只要說「我要什麼風格、什麼內容、什麼結構」</li>
+    <li><strong>計算工具的網頁介面</strong> — 把小工具做成網頁版,手機開會時也能用</li>
+    <li><strong>正式文件的草稿</strong> — Word 格式的會議紀錄、規範摘要、案件總結</li>
+  </ul>
+
+  <div class="callout">
+    <div class="cl-label">這節的定位</div>
+    <div class="cl-body">
+      生成文件或網頁的具體做法依需求差異很大 — <strong>有需要時開個 Claude 對話,跟它說你要什麼,它會告訴你怎麼開始</strong>。這節只讓你知道「這件事是可以做的」。
+    </div>
+  </div>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">PART 6 · KEY TAKEAWAYS</div>
+  <h4>讀完第六篇(選讀),你應該記住這三件事</h4>
+  <p><strong>1. 你不用會寫程式,Claude 可以幫你寫工具。</strong> 你的角色是「定義需求 + 驗證結果」。</p>
+  <p><strong>2. 用最小可運作版本 + 反覆迭代,而不是期待一次到位。</strong></p>
+  <p><strong>3. 計算工具的輸出一定要人工驗算。</strong> 用簡單可手算的案例先測試。</p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===                 PART 7 · 踩坑日誌              === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="part7">
+  <div class="pn">PART 7 · FIELD NOTES</div>
+  <h2>第七篇 · 踩坑日誌 · 7 個你最容易跌的地方</h2>
+  <p class="part-lead">
+    這篇彙整了初學者使用 AI 最常踩的 7 個坑。
+    每個案例附「<strong>辨識訊號</strong>」 — 看到這個訊號出現,就要警覺。
+  </p>
+</div>
+
+<!-- PIT 01 - 07 -->
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 01</span>
+    <span class="pit-title">Claude 會討好 — 你問了一個錯的問題,它順著答</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">工程師問:<strong>「樓板厚度 12 公分、跨距 6 米,鋼筋怎麼配?」</strong> — 但實際上 6 米跨配 12 公分樓板是不合理的(過薄)。Claude 沒指出這點,直接給了配筋方案。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">當你問「給定條件 + 求解」型問題,Claude 沒對前提評論就直接答 — 補一句:<em>「我這個設定條件本身合理嗎?有沒有違反常規的地方?」</em></div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:你前提含有「具體尺寸 / 規格 / 條件」,Claude 沒對前提做任何評論就跳到答案 — 一定要回頭問前提是否合理。
+    </div>
+  </div>
+</div>
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 02</span>
+    <span class="pit-title">Claude 引用了不存在的規範條號</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">問深開挖監測規定,Claude 引用「TGS-EXCAVM113 § 5.4.2 三級警戒制度」 — 條號完整、語氣肯定,但實際不存在。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">任何條號、論文出處、文獻名稱,寫進正式文件前,一定要回查原始來源。打開規範 PDF 用搜尋功能,或上 Google Scholar 查論文。</div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:Claude 給出的條號帶有完整章節編號(§ 5.4.2 這種),而你腦中沒印象 — 必查。
+    </div>
+  </div>
+</div>
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 03</span>
+    <span class="pit-title">Claude 給的「文獻」根本不存在</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">問「有什麼國際文獻支持這個做法?」Claude 給 3 篇論文,標題、作者、年份、期刊一應俱全 — 但其中 2 篇根本不存在。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">任何文獻引用,送出前都要上 Google Scholar 查證。輸入論文標題,看是否搜得到。搜不到,大概率是 Claude 編的。</div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:你問「有什麼文獻 / 案例 / 論文 / 標準」,Claude 一次給你 3 個以上、每個都有完整作者年份 — 全部要查。
+    </div>
+  </div>
+</div>
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 04</span>
+    <span class="pit-title">Claude 中文夾雜對岸用詞</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">回答出現「鋼筋的屈服強度」「混凝土標號 C30」「樓蓋」「框架結構」等用詞。看起來都對 — 但是對岸用法,寫進對外文件業主會覺得不專業,送審可能直接退件。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">
+        對外文件出去前掃常見對岸用詞 → 台灣慣用詞:<br>
+        屈服強度 → 降伏強度;砼 / 混凝土標號 → 混凝土強度;樓蓋 → 樓板;框架 → 構架;抗震 → 耐震<br>
+        也可在 Project 指示明訂「用台灣慣用結構工程術語」。
+      </div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:看到「屈服」「砼」「標號」「樓蓋」「框架」這幾個詞,先停下來 — 對外文件不能直接用。
+    </div>
+  </div>
+</div>
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 05</span>
+    <span class="pit-title">Claude 把不同版本規範混在一起講</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">問 ASCE 7 對隔震建築的規定,Claude 的回答把 ASCE 7-16 和 7-22 的內容混在同一段,沒明確分版本。實際上兩版規定可能不同。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">為什麼初學者會踩</div>
+      <div class="pit-text">Claude 講得通順流暢,初學者很難分辨「這段是 7-16 的、那段是 7-22 的」。直接套用可能引用錯版本。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">問問題時<strong>明確指定版本</strong>(「ASCE 7-22」不要只說「ASCE 7」)。Claude 回答後要它「<strong>逐條標明對應條號和版本</strong>」。回查時注意版本符合。</div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:回答裡規範版本沒明確標,或同一段話對應的條文編號邏輯不一致 — 要明確指定版本重問。
+    </div>
+  </div>
+</div>
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 06</span>
+    <span class="pit-title">Claude 答得很完整,但缺關鍵限制條件</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">問「RC 柱斷面快速估算法」,Claude 給一套公式和流程,看起來完整可用。但沒提這個方法對「軸力比超過 0.4 的高層柱」會嚴重低估。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">為什麼初學者會踩</div>
+      <div class="pit-text">他不知道有這個限制條件,套了就用。對輕量案件可能不出問題,對高層案件就會出大事。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">拿到「通用公式 / 方法」的答案,主動補一句:<em>「這個方法在什麼情況下不適用?有什麼前提假設?<strong>軸力比、跨高比、地震力大小</strong>各有什麼適用範圍?」</em></div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:Claude 給的「通用公式」沒談適用範圍、邊界條件、何時不適用 — 必須主動問。
+    </div>
+  </div>
+</div>
+
+<div class="pit-card">
+  <div class="pit-head">
+    <span class="pit-no">PIT 07</span>
+    <span class="pit-title">Claude 把「我以為你在問什麼」當成你問的</span>
+  </div>
+  <div class="pit-body">
+    <div class="pit-row">
+      <div class="pit-label">情境</div>
+      <div class="pit-text">工程師問「樓板開孔附近要怎麼補強」 — 沒講開孔尺寸、樓板厚度、開孔位置。Claude 給了一套「常規補強做法」 — 但這套做法針對小開孔,工程師問的其實是大開孔。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">為什麼初學者會踩</div>
+      <div class="pit-text">Claude 不會說「你的資訊不夠,我假設了 X」 — 它直接給答案。初學者以為這就是答案,沒注意到 Claude 是基於某個假設在回答。</div>
+    </div>
+    <div class="pit-row">
+      <div class="pit-label">應對</div>
+      <div class="pit-text">Claude 沒問細節就給了完整答案 — 一定要回頭問:<em>「你剛剛假設了什麼條件?如果我的實際條件是 X、Y、Z,答案會怎麼變?」</em></div>
+    </div>
+    <div class="pit-signal">
+      <strong>辨識訊號</strong>:你問了一個牽涉具體案情的問題,Claude 沒問你細節就給完整答案 — 它在用「常規假設」應答你的特殊情境。
+    </div>
+  </div>
+</div>
+
+<div class="part-end">
+  <div class="pe-label">PART 7 · KEY TAKEAWAYS</div>
+  <h4>讀完踩坑日誌,你應該培養這三個習慣</h4>
+  <p><strong>1. 看到完整條號 / 文獻 — 必查。</strong> 編造率最高的兩塊。</p>
+  <p><strong>2. Claude 沒問細節就給答案 — 補問前提。</strong> 它一定有假設,只是沒告訴你。</p>
+  <p><strong>3. Claude 給通用方法 — 問適用範圍。</strong> 「這方法什麼時候不適用?」</p>
+</div>
+
+<!-- ===================================================== -->
+<!-- ===                  附錄                         === -->
+<!-- ===================================================== -->
+
+<div class="part-heading" id="appendix">
+  <div class="pn">APPENDIX</div>
+  <h2>附錄</h2>
+  <p class="part-lead">
+    這部分是<strong>工具型內容</strong> — 不需要從頭讀,在你工作時當查詢用。包含詞彙表(常見術語解釋)和規章索引(從教學文件對到完整規章)。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">A</span>
+    <h3>詞彙表</h3>
+  </div>
+
+  <table class="appendix-table">
+    <thead>
+      <tr>
+        <th style="width: 28%;">術語</th>
+        <th>說明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="term">Claude</td>
+        <td>Anthropic 公司開發的生成式 AI 助理。公司目前採用 Claude Team 方案,所有同仁透過公司帳號使用。</td>
+      </tr>
+      <tr>
+        <td class="term">Project</td>
+        <td>Claude 提供的工作空間概念。同一個 Project 內的所有對話,共享同一份知識庫和指示。分「個人 Project」(私有)和「共用 Project」(多人協作)。</td>
+      </tr>
+      <tr>
+        <td class="term">知識庫 (Knowledge Base)</td>
+        <td>Project 內上傳的文件集合。Claude 在這個 Project 內回答問題時,會優先參考知識庫的內容。</td>
+      </tr>
+      <tr>
+        <td class="term">Project 指示 (Instructions)</td>
+        <td>Project 設定中的「個人化說明」 — 告訴 Claude 你是誰、要做什麼、有什麼偏好。所有對話自動套用。</td>
+      </tr>
+      <tr>
+        <td class="term">對話 (Conversation)</td>
+        <td>單次的問答記錄。在 Claude 介面顯示為左側清單。同一 Project 下可以開很多個對話。</td>
+      </tr>
+      <tr>
+        <td class="term">上下文 (Context)</td>
+        <td>Claude「記得」的內容。包含目前對話的所有訊息、Project 知識庫、Project 指示。</td>
+      </tr>
+      <tr>
+        <td class="term">Token</td>
+        <td>Claude 處理文字的最小單位,大致對應「字」或「詞」。中文約 1 字 = 1 token,英文約 4 字 = 1 token。Team 方案有用量配額,但對日常使用足夠。</td>
+      </tr>
+      <tr>
+        <td class="term">幻覺 (Hallucination)</td>
+        <td>AI 編造不存在資訊的現象。在結構工程領域,最常見的是編造規範條號和論文出處(見 PIT 02, 03)。</td>
+      </tr>
+      <tr>
+        <td class="term">討好傾向 (Sycophancy)</td>
+        <td>AI 順著使用者意見回答的傾向。會讓 AI 認可錯誤前提、不主動指出問題(見 PIT 01)。</td>
+      </tr>
+      <tr>
+        <td class="term">Claude for Office</td>
+        <td>Claude 在 Word、Excel、PowerPoint 內直接呼叫的整合工具。免去切視窗、複製貼上的麻煩(見 § 17)。</td>
+      </tr>
+      <tr>
+        <td class="term">Claude Code</td>
+        <td>Claude 的命令列開發工具,適合寫程式、自動化任務。<strong>本公司僅限指定使用者安裝</strong>,一般同仁不適用,詳見 IT 公告。</td>
+      </tr>
+      <tr>
+        <td class="term">Cowork</td>
+        <td>Claude 的桌面助手工具。<strong>本公司目前已關閉此功能</strong>,如有需要請聯繫管理員。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">B</span>
+    <h3>規章對應索引</h3>
+  </div>
+
+  <p>本教學文件中的「規章重點」是公司完整規章的<strong>精簡版</strong>。下表對應到完整規章的章節,便於查詢:</p>
+
+  <table class="appendix-table">
+    <thead>
+      <tr>
+        <th style="width: 50%;">教學文件章節</th>
+        <th>完整規章對應</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="term">§ 05 不該用 AI 做的事 · 絕對禁止 #1</td><td>《公司 AI 使用規章》§ 4.1 簽證責任歸屬</td></tr>
+      <tr><td class="term">§ 05 不該用 AI 做的事 · 絕對禁止 #2</td><td>《公司 AI 使用規章》§ 3.2 案件資料管理</td></tr>
+      <tr><td class="term">§ 05 不該用 AI 做的事 · 絕對禁止 #3</td><td>《公司 AI 使用規章》§ 4.2 對外文件審核</td></tr>
+      <tr><td class="term">§ 05 不該用 AI 做的事 · 該謹慎(所有條目)</td><td>《公司 AI 使用規章》§ 4 AI 產出責任</td></tr>
+      <tr><td class="term">§ 05 核心鐵則「Claude 裡只放副本」</td><td>《公司 AI 使用規章》§ 3.1 資料管理鐵則</td></tr>
+      <tr><td class="term">§ 13 共用 Project</td><td>《公司 AI 使用規章》§ 2.3 共用空間管理</td></tr>
+      <tr><td class="term">§ 14 範本 Project</td><td>《公司 AI 使用規章》§ 2.4 公司範本制度</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-block">
+    註:完整規章另由規章管理單位發布,本教學文件僅摘錄與日常使用相關的精簡版。法律或合規問題,請以完整規章為準。
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">C</span>
+    <h3>帳號管理相關</h3>
+  </div>
+
+  <p>
+    公司會定期盤點 AI 工具帳號的使用情況。<strong>連續數個月未使用的帳號,可能會被回收以釋出席次給其他需要的同仁</strong>。
+  </p>
+
+  <p>
+    如果你預期會有一段時間不使用 AI 工具(長期駐點、外派、產假、專心跑長期案件等),建議<strong>主動告知管理單位</strong>,可避免帳號被誤認為閒置而進入回收流程。
+  </p>
+
+  <div class="callout">
+    <div class="cl-label">給使用者的提醒</div>
+    <div class="cl-body">
+      帳號回收後若日後需要,須<strong>重新走申請流程</strong>。詳細的閒置盤點機制與離職交接程序,請參閱《AI 工具帳號管理 SOP》(由管理單位發布)。
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">D</span>
+    <h3>Claude for Office 詳細說明</h3>
+  </div>
+
+  <p>
+    本節為 <strong>PART 4 § 17</strong> 的擴充說明,提供給<strong>已使用或計畫使用 Microsoft 365 訂閱版</strong>的同仁參考。如果你電腦的 Office 是 2010、2016、2019 等買斷版,此節內容目前對你不適用,可略過。
+  </p>
+
+  <div class="subsection-head">D-1 · 版本支援對照</div>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 50%;">Office 版本</th>
+        <th>能否使用 Claude for Office</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">Office 2010</td><td>❌ 完全不支援</td></tr>
+      <tr><td class="dim">Office 2013 / 2016 / 2019(買斷版)</td><td>❌ 不支援</td></tr>
+      <tr><td class="dim">Office 2021(買斷版)</td><td>❌ 不支援</td></tr>
+      <tr><td class="dim">Microsoft 365 訂閱版(Windows / Mac)</td><td>✅ 支援</td></tr>
+      <tr><td class="dim">Microsoft 365 for Business / Enterprise</td><td>✅ 支援</td></tr>
+      <tr><td class="dim">Excel for the web(免費網頁版)</td><td>✅ 支援(但功能比桌面版少)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-block">
+    註:版本資訊參考 Anthropic 與 Microsoft 官方文件(2026 年 5 月)。Anthropic 與 Microsoft 可能隨時調整支援範圍,正式部署前請以官方頁面為準。
+  </div>
+
+  <div class="subsection-head">D-2 · 三個 Office 工具的定位</div>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width: 26%;">工具</th>
+        <th style="width: 37%;">最適合的用法</th>
+        <th style="width: 37%;">不適合的用法</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dim">Claude for Excel</td>
+        <td class="lhs">處理表格資料 / 寫公式 / 整理數值 / 簡單統計分析</td>
+        <td>大型工具開發(用網頁版 + 程式碼比較好)</td>
+      </tr>
+      <tr>
+        <td class="dim">Claude for Word</td>
+        <td class="lhs">潤稿 / 翻譯 / 摘要 / 格式調整 / 規範條文撰寫</td>
+        <td>需要嚴密邏輯討論的長文件(網頁版對話更順)</td>
+      </tr>
+      <tr>
+        <td class="dim">Claude for PowerPoint</td>
+        <td class="lhs">套用公司範本快速生成簡報 / 內容摘要 / 排版建議</td>
+        <td>需要設計感的對外簡報(美感還是要人工調)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">D-3 · 安裝步驟概要</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">確認 Office 版本</div>
+        <div class="step-text">在 Excel 點選 <strong>檔案 → 帳戶</strong>,確認顯示「Microsoft 365」字樣。若不是,則此功能不適用。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">在 Office 內安裝 add-in</div>
+        <div class="step-text">在 Excel / Word / PowerPoint 點選 <strong>常用 → 取得增益集</strong>(或 <strong>檔案 → 取得增益集</strong>),搜尋「<strong>Claude by Anthropic</strong>」,點「新增」安裝。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">登入 Claude 帳號</div>
+        <div class="step-text">安裝後右側會出現 Claude 側欄。<strong>用公司配發的 Claude Team 帳號登入</strong>,不要用個人帳號。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">試用一個簡單任務</div>
+        <div class="step-text">在 Excel 開一個表格,在 Claude 側欄輸入「請幫我分析這個表格的趨勢」 — 確認可正常運作。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">D-4 · 使用注意事項</div>
+
+  <ul class="signal-list">
+    <li><strong>用量算在公司 Team 帳號的額度內。</strong> Office add-in 不是「另外配的額度」,跟網頁版共用同一個額度池。</li>
+    <li><strong>Claude 會讀取目前開啟檔案的內容。</strong> 處理敏感案件時要意識到 — 跟網頁版上傳檔案的隱私規格相同。</li>
+    <li><strong>Excel for the web(網頁版)功能受限。</strong> 沒有 VBA、Power Query 等進階功能。對結構工程師的 Excel 工具開發場景不適用,但對基本表格處理夠用。</li>
+    <li><strong>不熟先不要安裝。</strong> 對 Office add-in 不熟的同仁,建議先用網頁版 Claude 熟練後,再評估是否需要 add-in。網頁版 + 複製貼上,90% 的場景都夠用。</li>
+  </ul>
+
+  <div class="callout">
+    <div class="cl-label">最後一句</div>
+    <div class="cl-body">
+      Claude for Office 是<strong>方便加成,不是必要工具</strong>。Office 版本不支援的同仁,完全不需要焦慮 — 網頁版的 Claude 仍是公司核心使用方式,功能比 Office add-in 還多(支援 Project、知識庫、自訂指示等)。
+    </div>
+  </div>
+</section>
+
+<!-- === 文件結束 === -->
+<div class="part-end" style="margin-top: 80px; background: var(--ink); border-color: var(--ink);">
+  <div class="pe-label" style="color: var(--accent-soft);">END OF MANUAL</div>
+  <h4 style="color: var(--paper);">最後一句話</h4>
+  <p style="color: var(--paper);">
+    這份手冊不是「<strong style="color: var(--accent-soft);">學完就會</strong>」的內容 — 真正的學習在你<strong style="color: var(--accent-soft);">自己動手做</strong>的時候發生。
+  </p>
+  <p style="color: var(--paper);">
+    建議的學習節奏:讀完一篇 → 找一個自己工作上的真實任務試試看 → 踩個坑 → 回來看對應的訊號和應對 → 下次就會避開。
+  </p>
+  <p style="color: var(--paper);">
+    AI 不是學一次就能用一輩子的工具 — 但用得熟的人,跟用得生的人,差距會越拉越大。<strong style="color: var(--accent-soft);">早一天熟練,早一天受益。</strong>
+  </p>
+</div>
+
+<footer class="doc-footer">
+  <span>築遠 AI 使用教學手冊 · 全七篇 + 附錄</span>
+  <span>2026-05 · v1.0</span>
+</footer>
+
+</div>
+</body>
+</html>
