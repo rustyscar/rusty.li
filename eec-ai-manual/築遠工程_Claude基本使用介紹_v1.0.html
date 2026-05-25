@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>築遠 Claude 基本使用介紹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1B2A33;
+  --ink-soft: #2C3D47;
+  --ink-mute: #5E6E78;
+  --ink-light: #9AA5AE;
+  --paper: #FFFFFF;
+  --paper-soft: #FAFBFC;
+  --panel: #F4F6F8;
+  --line: #E1E5E9;
+  --line-soft: #ECEFF2;
+
+  --accent: #0E7C7B;
+  --accent-soft: #4FA8A7;
+  --accent-bg: #E6F2F1;
+  --accent-bg-deep: #CFE7E5;
+
+  --warn: #C77B26;
+  --warn-soft: #E09554;
+  --warn-bg: #FBEFDE;
+
+  --danger: #C0392B;
+  --danger-bg: #FBE6E3;
+
+  --gold: #B8893E;
+  --gold-bg: #F8F1E2;
+
+  --font-sans: 'Noto Sans TC', 'PingFang TC', '微軟正黑體', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  color: var(--ink-soft);
+  background: var(--paper);
+  line-height: 1.85;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  padding: 50px 30px 80px;
+}
+
+.container { max-width: 920px; margin: 0 auto; }
+
+.side-nav {
+  position: fixed;
+  top: 50%;
+  right: 28px;
+  transform: translateY(-50%);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(27, 42, 51, 0.05);
+  max-width: 200px;
+}
+.side-nav .sn-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-light);
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.side-nav a {
+  display: block;
+  padding: 5px 0;
+  color: var(--ink-mute);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--line-soft);
+  transition: color 0.15s;
+}
+.side-nav a:last-child { border-bottom: 0; }
+.side-nav a:hover { color: var(--accent); }
+.side-nav a strong { color: var(--ink); font-weight: 700; }
+@media (max-width: 1240px) { .side-nav { display: none; } }
+
+.doc-header {
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 28px;
+  margin-bottom: 48px;
+}
+.doc-header .doc-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.doc-header h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin-bottom: 14px;
+}
+.doc-header .doc-sub {
+  font-size: 1.1rem;
+  color: var(--ink-mute);
+  font-weight: 400;
+  line-height: 1.7;
+}
+.doc-header .doc-meta {
+  margin-top: 22px;
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+}
+.doc-header .doc-meta strong { color: var(--ink); font-weight: 700; }
+
+.intro-block {
+  background: var(--panel);
+  border-left: 4px solid var(--ink);
+  padding: 22px 28px;
+  margin-bottom: 50px;
+}
+.intro-block p {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.95;
+}
+.intro-block p + p { margin-top: 10px; }
+.intro-block strong { color: var(--ink); font-weight: 700; }
+
+.toc {
+  border: 1px solid var(--line);
+  margin-bottom: 60px;
+  background: var(--paper-soft);
+}
+.toc-title {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 24px;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.toc-item {
+  padding: 18px 24px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: background 0.15s;
+}
+.toc-item:hover { background: var(--accent-bg); }
+.toc-item:nth-child(even) { border-right: 0; }
+.toc-item .tc-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  margin-bottom: 6px;
+}
+.toc-item .tc-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.toc-item .tc-desc {
+  font-size: 0.85rem;
+  color: var(--ink-mute);
+  line-height: 1.6;
+}
+
+.part-heading {
+  margin: 60px 0 36px;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--accent);
+  scroll-margin-top: 24px;
+}
+.part-heading.first { margin-top: 0; }
+.part-heading .pn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.part-heading h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+.part-heading .part-lead {
+  font-size: 1.02rem;
+  color: var(--ink-mute);
+  line-height: 1.85;
+  max-width: 760px;
+}
+
+.section {
+  margin-bottom: 56px;
+  scroll-margin-top: 24px;
+}
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.section-head .sn {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+.section-head h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.002em;
+  line-height: 1.35;
+}
+
+.section p {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.95;
+  margin-bottom: 16px;
+}
+.section p strong { color: var(--ink); font-weight: 700; }
+
+.subsection-head {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 28px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--accent);
+  display: inline-block;
+  padding-right: 24px;
+}
+
+.callout {
+  border: 1.5px solid var(--accent);
+  border-left-width: 5px;
+  background: var(--accent-bg);
+  padding: 20px 26px;
+  margin: 22px 0;
+}
+.callout .cl-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.callout .cl-body {
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.85;
+}
+.callout .cl-body strong { color: var(--accent); font-weight: 700; }
+.callout .cl-body p { margin-bottom: 10px; }
+.callout .cl-body p:last-child { margin-bottom: 0; }
+.callout .cl-body ol { margin: 6px 0 0 24px; }
+.callout .cl-body ol li { margin-bottom: 4px; }
+
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout.warn .cl-label { color: var(--warn); }
+.callout.warn .cl-body strong { color: var(--warn); }
+.callout.danger { border-color: var(--danger); background: var(--danger-bg); }
+.callout.danger .cl-label { color: var(--danger); }
+.callout.danger .cl-body strong { color: var(--danger); }
+.callout.gold { border-color: var(--gold); background: var(--gold-bg); }
+.callout.gold .cl-label { color: var(--gold); }
+.callout.gold .cl-body strong { color: var(--gold); }
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+}
+.compare thead {
+  background: var(--accent-bg);
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+.compare thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  border-right: 1px solid var(--accent-bg-deep);
+}
+.compare thead th:last-child { border-right: 0; }
+.compare tbody tr { border-bottom: 1px solid var(--line); }
+.compare tbody tr:last-child { border-bottom: 1.5px solid var(--ink); }
+.compare tbody td {
+  padding: 14px 16px;
+  vertical-align: top;
+  line-height: 1.8;
+  font-size: 0.95rem;
+  border-right: 1px solid var(--line-soft);
+}
+.compare tbody td:last-child { border-right: 0; }
+.compare tbody td.dim {
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--paper-soft);
+  width: 28%;
+}
+.compare tbody td.lhs { background: var(--paper-soft); }
+
+.signal-list {
+  list-style: none;
+  margin: 18px 0 24px;
+}
+.signal-list li {
+  position: relative;
+  padding: 10px 0 10px 36px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.signal-list li:last-child { border-bottom: 0; }
+.signal-list li::before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  color: var(--warn);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.signal-list li strong { color: var(--ink); font-weight: 700; }
+
+.note-block {
+  margin: 18px 0;
+  padding: 12px 18px;
+  background: var(--paper-soft);
+  border-left: 3px solid var(--ink-light);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--ink-mute);
+  line-height: 1.75;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 22px 0;
+}
+.two-col .col {
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.two-col .col.bad { border-left: 4px solid var(--danger); }
+.two-col .col.good { border-left: 4px solid var(--accent); }
+.two-col .col.neutral { border-left: 4px solid var(--ink-light); }
+.two-col .col-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.two-col .col.bad .col-label { color: var(--danger); }
+.two-col .col.good .col-label { color: var(--accent); }
+.two-col .col.neutral .col-label { color: var(--ink-mute); }
+.two-col .col-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.two-col .col-text {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.two-col .col-text strong { color: var(--ink); font-weight: 700; }
+.two-col .col-text p { margin-bottom: 8px; }
+.two-col .col-text p:last-child { margin-bottom: 0; }
+.two-col .col-text ul { margin: 8px 0 0 18px; font-size: 0.94rem; }
+.two-col .col-text ul li { margin-bottom: 4px; }
+
+.steps { margin: 22px 0; }
+.step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--line);
+}
+.step:last-child { border-bottom: 0; }
+.step .step-n {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--accent);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step .step-body { padding-top: 4px; }
+.step .step-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.step .step-text {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.step .step-text strong { color: var(--ink); font-weight: 700; }
+.step .step-text code {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: var(--panel);
+  padding: 1px 6px;
+  color: var(--accent);
+}
+
+.part-end {
+  margin-top: 60px;
+  padding: 30px 36px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+}
+.part-end .pe-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.part-end h4 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.part-end p {
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 10px;
+}
+.part-end p:last-child { margin-bottom: 0; }
+.part-end strong { color: var(--accent); font-weight: 700; }
+
+.appendix-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 0.92rem;
+}
+.appendix-table thead {
+  background: var(--ink);
+  color: var(--paper);
+}
+.appendix-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.appendix-table tbody tr { border-bottom: 1px solid var(--line); }
+.appendix-table tbody td {
+  padding: 12px 16px;
+  vertical-align: top;
+  line-height: 1.75;
+}
+.appendix-table tbody td.term {
+  font-weight: 700;
+  color: var(--ink);
+  width: 28%;
+  background: var(--paper-soft);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: var(--panel);
+  padding: 1px 6px;
+  color: var(--accent);
+}
+
+.doc-footer {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  body { padding: 30px 18px 60px; }
+  .doc-header h1 { font-size: 2rem; }
+  .part-heading h2 { font-size: 1.6rem; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .toc-item { border-right: 0; }
+  .two-col { grid-template-columns: 1fr; }
+  .doc-header .doc-meta { gap: 14px; }
+}
+
+@media print {
+  body { padding: 0; }
+  .side-nav { display: none; }
+  .section, .part-heading { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<nav class="side-nav">
+  <div class="sn-title">Navigation</div>
+  <a href="#part-1"><strong>PART 1</strong> · 入門</a>
+  <a href="#part-2"><strong>PART 2</strong> · 介面</a>
+  <a href="#part-3"><strong>PART 3</strong> · Project</a>
+  <a href="#part-4"><strong>PART 4</strong> · Artifact 等</a>
+  <a href="#part-5"><strong>PART 5</strong> · 用量 / 資料</a>
+  <a href="#appendix"><strong>APPENDIX</strong></a>
+</nav>
+
+<div class="container">
+
+<header class="doc-header">
+  <div class="doc-tag">Claude · Getting Started Guide</div>
+  <h1>Claude 基本使用介紹</h1>
+  <p class="doc-sub">給第一次拿到帳號的同仁 ── 介面、功能與注意事項</p>
+  <div class="doc-meta">
+    <span>築遠工程顧問有限公司</span>
+    <span>內部文件 · 入門包</span>
+    <span><strong>v1.0</strong> · 一一五年五月</span>
+  </div>
+</header>
+
+<div class="intro-block">
+  <p>這份文件<strong>不談</strong>「怎麼用 AI 寫計算書」、也不教 prompt 寫法。它只回答一件事:帳號開通後,你看到的這個介面,各個按鈕在做什麼,以及哪些地方要當心。</p>
+  <p>如果你還沒讀過<strong>《AI 工具使用原則》</strong>與<strong>《AI 工具使用細則》</strong>,請先讀那兩份;本文僅補充工具本身的操作面。涉及資料處理規範時,以細則為準。</p>
+</div>
+
+<nav class="toc">
+  <div class="toc-title">目錄 · Table of Contents</div>
+  <div class="toc-grid">
+    <a class="toc-item" href="#part-1">
+      <div class="tc-num">PART 01</div>
+      <div class="tc-name">先認識工具</div>
+      <div class="tc-desc">Claude 是什麼、Team 方案、登入與帳號辨認</div>
+    </a>
+    <a class="toc-item" href="#part-2">
+      <div class="tc-num">PART 02</div>
+      <div class="tc-name">介面與對話</div>
+      <div class="tc-desc">側邊欄、主畫面、對話的開法與保存期限</div>
+    </a>
+    <a class="toc-item" href="#part-3">
+      <div class="tc-num">PART 03</div>
+      <div class="tc-name">附檔與 Project</div>
+      <div class="tc-desc">可上傳什麼、Project 怎麼用、個人 / 共用之分</div>
+    </a>
+    <a class="toc-item" href="#part-4">
+      <div class="tc-num">PART 04</div>
+      <div class="tc-name">Artifact 與 Memory</div>
+      <div class="tc-desc">產出物的處理、跨對話記憶要不要開</div>
+    </a>
+    <a class="toc-item" href="#part-5">
+      <div class="tc-num">PART 05</div>
+      <div class="tc-name">用量與資料安全</div>
+      <div class="tc-desc">用量上限的算法、Team 方案下資料怎麼被處理</div>
+    </a>
+    <a class="toc-item" href="#appendix">
+      <div class="tc-num">APPENDIX</div>
+      <div class="tc-name">附錄</div>
+      <div class="tc-desc">名詞速查、找誰幫忙</div>
+    </a>
+  </div>
+</nav>
+
+<!-- PART 1 -->
+<div class="part-heading first" id="part-1">
+  <div class="pn">PART 01</div>
+  <h2>先認識工具</h2>
+  <p class="part-lead">
+    在點開 Claude 之前,先弄清楚:你用的是哪一套、跟「個人付費版」有什麼不同、登入要用哪個信箱。看似瑣碎,但弄錯就是後面所有規範的破口。
+  </p>
+</div>
+
+<section class="section" id="sec-1">
+  <div class="section-head">
+    <span class="sn">§ 01</span>
+    <h3>Claude 是什麼,我們用的是哪個版本</h3>
+  </div>
+
+  <p>Claude 是 <strong>Anthropic 公司</strong>開發的生成式 AI 助理,可透過<strong>網頁版</strong>(claude.ai)與<strong>手機 App</strong>(iOS / Android)使用。公司採用 <strong>Team 方案</strong>;與個人付費的 Pro 方案相比,差別在用量配額、可共用 Project、以及帳號由公司統一管理。</p>
+
+  <p>同仁日常會接觸到的 Claude 模型有三個系列,可在輸入框旁邊切換:</p>
+
+  <table class="compare">
+    <thead>
+      <tr><th>模型</th><th>適用場景</th><th>用量耗用</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">Opus</td><td class="lhs">較強、較慢,適合複雜推理、長文件、需要嚴密邏輯</td><td>高</td></tr>
+      <tr><td class="dim">Sonnet</td><td class="lhs">平衡型,適合日常使用、報告撰寫、規範整理</td><td>中</td></tr>
+      <tr><td class="dim">Haiku</td><td class="lhs">輕量、快速,適合短問答、格式整理</td><td>低</td></tr>
+    </tbody>
+  </table>
+
+  <p>公司並未強制使用哪一個;但每個模型的用量計算方式不同,日常工作優先選 Sonnet 通常就夠用(見 § 09)。</p>
+
+  <div class="callout">
+    <div class="cl-label">Note · 用語對照</div>
+    <div class="cl-body">
+      本文使用「對話」「Project」「Artifact」「知識庫」這幾個詞,皆為 Claude 介面上的正式用語,並非公司自創。後續細則或公告若出現相同用詞,意義一致。
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sec-2">
+  <div class="section-head">
+    <span class="sn">§ 02</span>
+    <h3>登入與初次設定</h3>
+  </div>
+
+  <div class="subsection-head">2-1 · 第一次登入</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">收到管理單位通知</div>
+        <div class="step-text">確認用來開通的是<strong>公司網域信箱</strong>。打開瀏覽器(建議 Chrome 或 Edge),前往 <code>claude.ai</code>。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">選擇登入方式</div>
+        <div class="step-text">選「以 Google 登入」或「以 Email 登入」,輸入<strong>公司網域信箱</strong>。<strong>不要</strong>使用個人 Gmail 或私人信箱。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">加入公司 Team 組織</div>
+        <div class="step-text">第一次登入時,系統會將你加入公司 Team。畫面左上角會顯示組織名稱,確認是「築遠工程」而非個人帳號。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">基本設定</div>
+        <div class="step-text">完成個人資料設定。語言可設為「繁體中文」;其他預設值先不用動,熟悉後再調整。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">2-2 · 個人帳號 vs 公司帳號的辨認</div>
+
+  <p>若你原本就有私人的 Claude 帳號,登入後請<strong>確認左上角的組織標示</strong>。</p>
+
+  <div class="two-col">
+    <div class="col good">
+      <div class="col-label">Company · 公司帳號</div>
+      <div class="col-title">左上角顯示組織名稱</div>
+      <div class="col-text">
+        <p>顯示「築遠工程」或類似的組織標識。屬於 Team 方案,可建立共用 Project、可被管理單位管理。</p>
+        <p><strong>涉及公司業務的 AI 使用,一律走這裡。</strong></p>
+      </div>
+    </div>
+    <div class="col bad">
+      <div class="col-label">Personal · 個人帳號</div>
+      <div class="col-title">只顯示你的名字或頭像</div>
+      <div class="col-text">
+        <p>沒有組織標示。屬於個人付費或免費方案,與公司無關。</p>
+        <p><strong>不可處理任何公司案件、業主圖檔、計算書或會議紀錄。</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="cl-label">Caution · 細則第六章</div>
+    <div class="cl-body">
+      涉及公司業務的 AI 使用,一律使用公司帳號。若你已在個人帳號裡處理過案件資料,即便事後刪除,正本仍應立即補存至公司檔案系統,並通知主管。
+    </div>
+  </div>
+</section>
+
+<!-- PART 2 -->
+<div class="part-heading" id="part-2">
+  <div class="pn">PART 02</div>
+  <h2>介面與對話</h2>
+  <p class="part-lead">
+    登入後畫面長什麼樣、每個區塊在做什麼;以及「對話」這個最基本的工作單位,有哪些你必須知道的特性。
+  </p>
+</div>
+
+<section class="section" id="sec-3">
+  <div class="section-head">
+    <span class="sn">§ 03</span>
+    <h3>介面總覽</h3>
+  </div>
+
+  <p>登入後畫面分成三塊。<strong>左側</strong>是導覽側邊欄,<strong>中間</strong>是對話主區,<strong>右側</strong>在需要時會跳出 Artifact 預覽(見 § 07)。</p>
+
+  <div class="subsection-head">3-1 · 側邊欄主要項目</div>
+
+  <table class="compare">
+    <thead>
+      <tr><th>項目</th><th>功能</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">New chat</td><td>開啟新對話。每次點都會建立一條獨立對話,彼此不共享記憶。</td></tr>
+      <tr><td class="dim">Chats</td><td>過往對話列表,按時間排序。點任一對話可繼續或回查。</td></tr>
+      <tr><td class="dim">Projects</td><td>進入 Project 列表(見 § 06)。包含你建立的、以及他人分享給你的。</td></tr>
+      <tr><td class="dim">Artifacts</td><td>集中查看 Claude 在過往對話中產出的文件、圖、程式。</td></tr>
+      <tr><td class="dim">頭像 / 設定</td><td>個人設定、語言、Memory 控制、登出、組織切換。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">3-2 · 對話主區的關鍵元素</div>
+
+  <ul class="signal-list">
+    <li><strong>輸入框</strong> — 可輸入文字,也可貼上圖、表格、程式碼。Shift + Enter 換行,Enter 送出。</li>
+    <li><strong>附檔鈕(迴紋針)</strong> — 上傳檔案。可同時拖曳多檔。</li>
+    <li><strong>模型切換</strong> — 在輸入框附近,可切 Opus / Sonnet / Haiku。</li>
+    <li><strong>工具切換</strong> — 可開啟「Web Search」「Extended Thinking」等選項;預設關閉。</li>
+  </ul>
+</section>
+
+<section class="section" id="sec-4">
+  <div class="section-head">
+    <span class="sn">§ 04</span>
+    <h3>對話(Chat):最基本的工作單位</h3>
+  </div>
+
+  <div class="subsection-head">4-1 · 一條對話 = 一個獨立脈絡</div>
+
+  <p>Claude <strong>不會跨對話記住內容</strong>(除非你開啟 Memory,見 § 08)。也就是說,你在「對話 A」上傳的圖檔、討論的結論,「對話 B」完全不會知道。</p>
+
+  <p>實務上的選擇方式:<strong>同一件事在同一條對話裡持續處理</strong>。如果一條對話太長(超過數十輪),Claude 會逐漸忘記最早的內容,建議整理結論後另開新對話。</p>
+
+  <div class="subsection-head">4-2 · 對話的命名與整理</div>
+
+  <p>Claude 會自動命名對話(根據第一句訊息)。命名不會很精準,建議自己改名:側邊欄對話項目上點滑鼠右鍵 → <strong>Rename</strong>。</p>
+
+  <div class="subsection-head">4-3 · 對話的保存期限</div>
+
+  <div class="callout warn">
+    <div class="cl-label">Caution · 細則第三章第三項</div>
+    <div class="cl-body">
+      對話內容預設保留 <strong>30 天</strong>,重要結論應另存至公司檔案系統。<strong>不要把對話紀錄當成正式工作紀錄。</strong>真的要留的結論,自己另存到公司既有檔案系統。
+    </div>
+  </div>
+</section>
+
+<!-- PART 3 -->
+<div class="part-heading" id="part-3">
+  <div class="pn">PART 03</div>
+  <h2>附檔與 Project</h2>
+  <p class="part-lead">
+    這部分牽涉到「把資料交給 Claude」的兩種方式 — 一次性附檔、以及長期放在 Project 知識庫。這也是細則裡資料管理規範最密集的區域,看完務必對齊。
+  </p>
+</div>
+
+<section class="section" id="sec-5">
+  <div class="section-head">
+    <span class="sn">§ 05</span>
+    <h3>附檔(Attachments):可以丟什麼、有什麼限制</h3>
+  </div>
+
+  <div class="subsection-head">5-1 · 支援的檔案格式</div>
+
+  <table class="compare">
+    <thead>
+      <tr><th>類別</th><th>支援格式</th><th>說明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">文件</td><td>PDF、DOCX、TXT、CSV、HTML、Markdown、RTF、ODT、EPUB</td><td>會抽取文字;PDF 同時讀取圖表與版面。</td></tr>
+      <tr><td class="dim">試算表</td><td>XLSX、CSV</td><td>XLSX 支援度不及 CSV;若分析失敗,改傳 CSV。</td></tr>
+      <tr><td class="dim">簡報</td><td>PPTX</td><td>支援,但複雜版面可能遺失。</td></tr>
+      <tr><td class="dim">圖片</td><td>JPEG、PNG、GIF、WebP</td><td>BMP、TIFF、RAW 不支援。</td></tr>
+      <tr><td class="dim">程式碼</td><td>幾乎所有常見副檔名</td><td>純文字方式讀取。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">5-2 · 大小與數量限制</div>
+
+  <ul class="signal-list">
+    <li><strong>單檔上限約 30 MB。</strong> 超過會直接被拒絕。</li>
+    <li><strong>單一對話最多 20 個附檔。</strong> 超過要刪舊的才能加新的。</li>
+    <li><strong>PDF 約 100 頁以內</strong>可完整解析(超過會被截斷或失敗)。</li>
+    <li><strong>圖片建議 1000×1000 像素以上</strong>;單張上限約 8000×8000。</li>
+  </ul>
+
+  <div class="subsection-head">5-3 · 上傳前一定要做的判斷</div>
+
+  <div class="callout danger">
+    <div class="cl-label">Stop · 細則第二章第四項</div>
+    <div class="cl-body">
+      <p>按下「上傳」之前,先回頭問自己這三個問題:</p>
+      <ol>
+        <li>這份資料的<strong>正本</strong>是否仍保存於公司檔案系統?</li>
+        <li>若這份資料因任何原因外流,本公司是否仍能向業主交代?</li>
+        <li>業主若知道本案資料正被上傳至 AI 服務,是否會反對?</li>
+      </ol>
+      <p>任一項答案為「否」或「不確定」 — <strong>停手,問主管。</strong></p>
+    </div>
+  </div>
+
+  <div class="subsection-head">5-4 · 上傳後的去向</div>
+
+  <p>上傳的檔案會儲存在 Anthropic 的伺服器,作為這條對話(或 Project)的脈絡來源。Team 方案下,Anthropic <strong>預設不會用這些內容訓練模型</strong>(詳見 § 10);但「不訓練」≠「不存在於第三方伺服器」,這兩件事要分清楚。</p>
+</section>
+
+<section class="section" id="sec-6">
+  <div class="section-head">
+    <span class="sn">§ 06</span>
+    <h3>Project:存放案件脈絡的工作區</h3>
+  </div>
+
+  <div class="subsection-head">6-1 · 什麼是 Project</div>
+
+  <p>Project 是一個「<strong>工作資料夾</strong>」的概念。每個 Project 有自己的<strong>知識庫(Knowledge Base)</strong>與<strong>專案指示(Instructions)</strong>,該 Project 內所有對話都會自動參考這些內容,不必每次重貼。</p>
+
+  <p>適合存放的內容:該案件的規範整理、計算範本、設計準則、背景說明、業主既往來文(經判斷可上傳者)。</p>
+
+  <div class="subsection-head">6-2 · 建立一個 Project</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">進入 Projects 區</div>
+        <div class="step-text">側邊欄點「Projects」 → 右上角「<strong>+ New Project</strong>」。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">命名</div>
+        <div class="step-text">填寫名稱與描述。建議命名格式:<strong>案件編號 + 案件簡稱</strong>,例如 <code>2026-XXX_新店某住宅大樓結構</code>。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">選擇可見性</div>
+        <div class="step-text"><strong>Private(私人)</strong> 或 <strong>Shared with organization(整個組織可見)</strong>。預設選 Private,要分享給特定人再另外操作。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <div class="step-title">進入 Project 主頁</div>
+        <div class="step-text">建立後右側即為「Project Knowledge」區,可開始上傳檔案、設定指示。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">6-3 · 加入知識庫內容</div>
+
+  <p>在 Project 主頁右側「Project Knowledge」區點「<strong>+</strong>」,可上傳檔案或直接貼上文字。所有放進來的內容,該 Project 內每次對話都會自動參考。</p>
+
+  <div class="two-col">
+    <div class="col good">
+      <div class="col-label">Recommended · 適合放入</div>
+      <div class="col-text">
+        <ul>
+          <li>案件用到的規範條文整理(自己整理過的)</li>
+          <li>計算範本與設計準則</li>
+          <li>業主背景說明、案件範圍說明</li>
+          <li>過去類似案件的關鍵結論(去識別化後)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col bad">
+      <div class="col-label">Avoid · 不適合放入</div>
+      <div class="col-text">
+        <ul>
+          <li>極大的原始 PDF(浪費容量、難管理)</li>
+          <li>與本案無關的個人資料</li>
+          <li>細則第二章第三項所列的禁止項</li>
+          <li>未整理過的會議錄音逐字稿原檔</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">6-4 · 個人 Project vs 共用 Project</div>
+
+  <div class="two-col">
+    <div class="col neutral">
+      <div class="col-label">Personal · 個人 Project</div>
+      <div class="col-title">只有你看得到</div>
+      <div class="col-text">
+        <p>只有你本人可以看到、可以用。其他同仁(含管理員)<strong>無法存取</strong>。</p>
+        <p>適用:個人主辦的案件、個人查核工具、規範整理筆記。</p>
+        <p><strong>注意:</strong>帳號一旦回收(離職、停用),內容無法再被任何人取回。案件正本必須留在公司檔案系統。</p>
+      </div>
+    </div>
+    <div class="col good">
+      <div class="col-label">Shared · 共用 Project</div>
+      <div class="col-title">多人協作</div>
+      <div class="col-text">
+        <p>透過「Share」邀請特定同仁加入。可給 <code>Can use</code>(可看可聊不可改)或 <code>Can edit</code>(可改知識庫)。</p>
+        <p>適用:多人協作大案、跨組諮詢工作。</p>
+        <p><strong>注意:</strong>擁有權不能轉移。擁有者離職前要依細則第四章第四項完成交接。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-head">6-5 · 分享 Project 給同仁</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <div class="step-title">進入要分享的 Project</div>
+        <div class="step-text">點右上角「<strong>Share project</strong>」(在 Project 名稱旁邊)。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <div class="step-title">輸入同仁 Email</div>
+        <div class="step-text">必須是<strong>同組織內成員</strong>的公司網域信箱。可一次貼多筆 Email。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <div class="step-title">選擇權限</div>
+        <div class="step-text">為每位成員選 <code>Can use</code> 或 <code>Can edit</code>。對方會收到通知,並出現在他的 Projects 列表。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="cl-label">Note · 補充</div>
+    <div class="cl-body">
+      分享 Project 只會共享「<strong>知識庫</strong>」與「<strong>指示</strong>」,<strong>不會共享你既有的對話</strong>。對方加入後,他開的新對話自己看,你開的對話依舊只有你自己看。
+    </div>
+  </div>
+</section>
+
+<!-- PART 4 -->
+<div class="part-heading" id="part-4">
+  <div class="pn">PART 04</div>
+  <h2>Artifact 與 Memory</h2>
+  <p class="part-lead">
+    Artifact 是 Claude 把「比較有份量的產出」獨立出來的方式;Memory 則是跨對話記憶的開關。前者建議學會用,後者建議先全部關閉。
+  </p>
+</div>
+
+<section class="section" id="sec-7">
+  <div class="section-head">
+    <span class="sn">§ 07</span>
+    <h3>Artifacts:Claude 產出的文件、圖、程式</h3>
+  </div>
+
+  <div class="subsection-head">7-1 · 什麼是 Artifact</div>
+
+  <p>當 Claude 產出「<strong>比較有份量、可以獨立拿出來用</strong>」的內容時,會自動把該內容放進右側的 <strong>Artifact 視窗</strong>,而不是塞在對話文字流中。常見場景:</p>
+
+  <ul class="signal-list">
+    <li>請 Claude 撰寫一份報告草稿、會議紀錄、回覆函</li>
+    <li>請 Claude 整理表格、流程圖、組織圖</li>
+    <li>請 Claude 寫 Excel 巨集、Python 計算腳本、HTML 文件</li>
+  </ul>
+
+  <p>Artifact 與對話分離,可以在右側獨立預覽、修改、下載。</p>
+
+  <div class="subsection-head">7-2 · 操作 Artifact</div>
+
+  <ul class="signal-list">
+    <li><strong>修改</strong> — 在對話中直接告訴 Claude 要改什麼,它會更新 Artifact。每次修改會留下版本紀錄,右上角可切換版本。</li>
+    <li><strong>下載</strong> — Artifact 視窗右下角有下載按鈕,可存成對應格式(HTML、TXT、PDF 等)。</li>
+    <li><strong>複製</strong> — 也可直接複製整段內容貼到 Word、Excel 等公司既有工具中。</li>
+  </ul>
+
+  <div class="subsection-head">7-3 · Artifact 的限制與風險</div>
+
+  <ul class="signal-list">
+    <li>Artifact 是 Claude 自己寫出來的<strong>靜態內容</strong>,無法即時連網取資料。</li>
+    <li>Artifact 內的計算、圖表、條文引用,<strong>仍需依細則第五章逐項校核</strong>(規範條號回查、計算驗算、中文用詞校對)。</li>
+    <li><strong>看起來漂亮 ≠ 正確。</strong> 排版精美的 Artifact 反而最容易讓人放鬆警覺。</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="cl-label">Caution · 常見誤區</div>
+    <div class="cl-body">
+      Claude 生成的計算書、條文引用、案例引述,有「<strong>看起來合理但其實虛構</strong>」的傾向。Artifact 越美越要警覺;直接貼進對外文件之前,務必逐項回查。
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sec-8">
+  <div class="section-head">
+    <span class="sn">§ 08</span>
+    <h3>Memory(記憶)與對話搜尋</h3>
+  </div>
+
+  <div class="subsection-head">8-1 · 兩個獨立的功能</div>
+
+  <p>在 <strong>Settings → Capabilities</strong> 中,可找到兩個與「跨對話記憶」相關的開關:</p>
+
+  <table class="compare">
+    <thead>
+      <tr><th>功能</th><th>作用</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">Search and reference chats</td><td>允許 Claude 在新對話中,自動搜尋你過去的對話內容並引用。</td></tr>
+      <tr><td class="dim">Generate memory from chat history</td><td>允許 Claude 從你過去的對話中萃取「關於你」的摘要(角色、習慣用語、偏好格式等),自動帶入未來對話。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">8-2 · 建議的預設值</div>
+
+  <div class="callout gold">
+    <div class="cl-label">Recommendation · 入門期建議</div>
+    <div class="cl-body">
+      <strong>建議同仁先全部關閉</strong>,熟悉工具與細則之後,再視個人工作型態決定要不要打開。
+    </div>
+  </div>
+
+  <p>理由:</p>
+
+  <ul class="signal-list">
+    <li>跨對話記憶會讓「<strong>上一個案件的脈絡</strong>」滲入「<strong>下一個案件的對話</strong>」,實務上不見得想要這樣。</li>
+    <li>若不慎將敏感資訊納入 Memory,清除程序比清除對話麻煩。</li>
+    <li>在 Project 內的脈絡傳遞,已透過「<strong>知識庫</strong>」處理;Memory 是另一條獨立通道,功能上不必要重疊。</li>
+  </ul>
+
+  <div class="subsection-head">8-3 · 檢視與清除 Memory</div>
+
+  <p>Settings → Capabilities → Memory,可看到 Claude 對你建立的所有 Memory 條目,逐筆刪除,或整批清空。</p>
+</section>
+
+<!-- PART 5 -->
+<div class="part-heading" id="part-5">
+  <div class="pn">PART 05</div>
+  <h2>用量與資料安全</h2>
+  <p class="part-lead">
+    用量限制決定你哪一天會「撞牆」;資料政策則是 Team 方案的核心保障 — 但保障的範圍跟一般人想的不太一樣,這一節把它說清楚。
+  </p>
+</div>
+
+<section class="section" id="sec-9">
+  <div class="section-head">
+    <span class="sn">§ 09</span>
+    <h3>用量限制:會在什麼時候撞牆</h3>
+  </div>
+
+  <div class="subsection-head">9-1 · Team 方案的兩層限制</div>
+
+  <p>Team 方案的用量分兩層計算:</p>
+
+  <ul class="signal-list">
+    <li><strong>5 小時滾動窗口</strong> — 從你發出第一條訊息起算的 5 小時內,有一定的用量上限。</li>
+    <li><strong>每週上限</strong> — 7 天內的累計用量也有上限,從每週首次使用起算。</li>
+  </ul>
+
+  <p>用量是按「對話的長度、複雜度、所用模型、附檔大小」綜合計算,<strong>並非按訊息則數</strong>。Anthropic 並未公開絕對數值。</p>
+
+  <div class="subsection-head">9-2 · 撞牆時的表現</div>
+
+  <p>接近上限時,系統會顯示提醒;達到上限後,該帳號暫時無法送出新訊息(舊對話仍可讀),需等下次重置。</p>
+
+  <div class="subsection-head">9-3 · 實務建議</div>
+
+  <ul class="signal-list">
+    <li>處理大型 PDF 或長文件時,使用 <strong>Sonnet 通常足夠</strong>,不必預設用 Opus。</li>
+    <li>同樣的需求,<strong>整理過再丟</strong>(把不相關段落去掉、把問題寫清楚),耗用會少很多。</li>
+    <li>同一條對話越長,每次回應的耗用越大;<strong>階段性結論告一段落後,另開新對話</strong>。</li>
+  </ul>
+</section>
+
+<section class="section" id="sec-10">
+  <div class="section-head">
+    <span class="sn">§ 10</span>
+    <h3>Team 方案下,你的資料怎麼被處理</h3>
+  </div>
+
+  <div class="subsection-head">10-1 · 三個關鍵事實</div>
+
+  <table class="compare">
+    <thead>
+      <tr><th>面向</th><th>實際情況</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="dim">模型訓練</td><td>Anthropic 商業方案(含 Team)<strong>預設不使用你的輸入或輸出來訓練模型</strong>,除非你主動點按讚 / 倒讚回報 bug 並同意。</td></tr>
+      <tr><td class="dim">資料儲存位置</td><td>儲存於 Anthropic 雲端伺服器。對話、附檔、Project 知識庫皆然。</td></tr>
+      <tr><td class="dim">員工存取</td><td>Anthropic 員工原則上無法存取你的對話,除非你明確同意,或內容被安全機制標記。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="subsection-head">10-2 · 「不訓練」和「不外洩」是兩件事</div>
+
+  <p>細則第一章第一項已說明這點,這裡再強調一次,因為它最容易誤解:</p>
+
+  <div class="two-col">
+    <div class="col good">
+      <div class="col-label">不訓練 · What it means</div>
+      <div class="col-title">Anthropic 不拿你的內容調整模型參數</div>
+      <div class="col-text">
+        <p>該內容<strong>不會</strong>以「模型行為」的形式影響其他用戶。Team 方案的合約承諾。</p>
+      </div>
+    </div>
+    <div class="col bad">
+      <div class="col-label">不外洩 · NOT what it means</div>
+      <div class="col-title">內容仍儲存於 Anthropic 伺服器</div>
+      <div class="col-text">
+        <p>理論上仍可能因資安事件而曝光。這是<strong>所有第三方雲端 SaaS</strong>共有的風險,不是 Claude 特有的。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <div class="cl-label">Stop · 關鍵原則</div>
+    <div class="cl-body">
+      業主有保密約定時,「上傳到 Claude」在法律上即構成「<strong>提供予第三方</strong>」,<strong>無論訓練與否</strong>。這是禁止上傳的依據,不要混淆這兩件事。
+    </div>
+  </div>
+
+  <div class="subsection-head">10-3 · 管理員可以看到什麼</div>
+
+  <p>Team 方案的組織擁有者 / 管理員,可以在後台看到:</p>
+
+  <ul class="signal-list">
+    <li>組織內各帳號的存在、最後活動日</li>
+    <li>使用量統計(總量,非內容)</li>
+    <li>共用 Project 的清單(若該 Project 設為組織可見)</li>
+  </ul>
+
+  <p>但管理員<strong>無法直接讀取你的私人對話內容</strong>,也<strong>無法進入你的個人 Project 知識庫</strong>。這是 Team 方案的設計界線。</p>
+</section>
+
+<div class="part-end">
+  <div class="pe-label">KEY TAKEAWAYS · 五件最重要的事</div>
+  <h4>讀完這份介紹,你只要記得五件事就夠</h4>
+  <p><strong>1. 確認你登入的是公司帳號</strong> — 左上角看到「築遠工程」才對。</p>
+  <p><strong>2. 對話保留 30 天</strong> — 重要結論自己另存,不要當正式紀錄。</p>
+  <p><strong>3. 上傳前先問三個問題</strong> — 正本在哪、能不能交代、業主會不會反對。</p>
+  <p><strong>4. Memory 先關</strong> — 熟了再開,Project 知識庫已經夠用。</p>
+  <p><strong>5. 「不訓練」≠「不外洩」</strong> — 業主保密約定永遠優先。</p>
+</div>
+
+<!-- APPENDIX -->
+<div class="part-heading" id="appendix">
+  <div class="pn">APPENDIX</div>
+  <h2>附錄</h2>
+  <p class="part-lead">
+    工具型內容,不必從頭讀;在你需要時當查詢用。
+  </p>
+</div>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">A</span>
+    <h3>名詞速查</h3>
+  </div>
+
+  <table class="appendix-table">
+    <thead>
+      <tr><th>術語</th><th>說明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="term">Claude</td><td>Anthropic 公司開發的生成式 AI 助理。公司採用 Claude Team 方案,所有同仁透過公司帳號使用。</td></tr>
+      <tr><td class="term">Team 方案</td><td>Claude 的商業方案之一,提供共用 Project、組織管理、不訓練模型的承諾。</td></tr>
+      <tr><td class="term">對話(Chat)</td><td>單次的問答記錄,在 Claude 介面顯示為左側清單。預設保留 30 天。</td></tr>
+      <tr><td class="term">Project</td><td>工作空間概念,內含知識庫與指示,該 Project 的所有對話共享脈絡。</td></tr>
+      <tr><td class="term">知識庫(Knowledge Base)</td><td>Project 內上傳的文件集合。Claude 回答問題時會優先參考。</td></tr>
+      <tr><td class="term">指示(Instructions)</td><td>Project 設定中的個人化說明 — 告訴 Claude 你是誰、要做什麼、偏好。</td></tr>
+      <tr><td class="term">Artifact</td><td>Claude 產出的獨立內容(文件、表、程式碼等),會顯示在右側專屬視窗。</td></tr>
+      <tr><td class="term">Memory</td><td>跨對話記憶機制。預設可關閉,建議入門期關閉。</td></tr>
+      <tr><td class="term">Opus / Sonnet / Haiku</td><td>Claude 的三個模型系列;依強度、速度、用量耗用排序。</td></tr>
+      <tr><td class="term">Web Search</td><td>對話內可手動開啟的選項,允許 Claude 即時搜尋網路。預設關閉。</td></tr>
+      <tr><td class="term">Extended Thinking</td><td>對話內可手動開啟的選項,讓 Claude 思考更久、回答更深入。會多耗用量。</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="sn">B</span>
+    <h3>遇到狀況時找誰</h3>
+  </div>
+
+  <table class="appendix-table">
+    <thead>
+      <tr><th>狀況</th><th>對應</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="term">無法登入、密碼問題、帳號被鎖</td><td>管理單位</td></tr>
+      <tr><td class="term">不確定某份資料能不能上傳</td><td>直屬主管(依細則第二章判斷)</td></tr>
+      <tr><td class="term">共用 Project 擁有權交接</td><td>管理單位協助,但主責在原擁有者本人</td></tr>
+      <tr><td class="term">離職前的帳號處理</td><td>離職前主動通知管理單位,並完成資料盤點</td></tr>
+      <tr><td class="term">Claude 工具本身的 bug、回應錯誤</td><td>可在介面內以倒讚回報 Anthropic;影響工作時告知管理單位</td></tr>
+      <tr><td class="term">對使用原則 / 細則本身有疑義</td><td>管理單位</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-block">
+    註:本入門包與《AI 工具使用原則》《AI 工具使用細則》並行使用。工具用法可以摸索,但資料判斷、校核責任、帳號交接的規範,以那兩份為準。
+  </div>
+</section>
+
+<div class="part-end" style="margin-top: 60px; background: var(--ink); border-color: var(--ink);">
+  <div class="pe-label" style="color: var(--accent-soft);">END OF GUIDE</div>
+  <h4 style="color: var(--paper);">最後一句</h4>
+  <p style="color: var(--paper);">
+    這份介紹是讓你能<strong style="color: var(--accent-soft);">動手用</strong>;它<strong style="color: var(--accent-soft);">不取代</strong>《AI 工具使用原則》與《AI 工具使用細則》。
+  </p>
+  <p style="color: var(--paper);">
+    工具用法可以摸索,規範不能。任何不確定,先問主管或管理單位,再動手。
+  </p>
+</div>
+
+<footer class="doc-footer">
+  <span>築遠工程顧問有限公司 · Claude 基本使用介紹</span>
+  <span>2026-05 · v1.0</span>
+</footer>
+
+</div>
+</body>
+</html>
