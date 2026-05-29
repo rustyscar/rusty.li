@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任務紀錄檔 — 結構工程期刊文章標題抓取</title>
+<style>
+  :root{
+    --primary:#1f4e79;      /* 主色：深藍 */
+    --accent:#3a7ca5;       /* 輔色：藍 */
+    --accent-light:#d6e6f2; /* 淺輔色 */
+    --accent-bg:#eef5fb;    /* 區塊背景 */
+    --border:#c3d7e8;
+    --text:#222;
+    --muted:#5a6b7b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:"Microsoft JhengHei","微軟正黑體","Segoe UI",sans-serif;
+    background:#ffffff;
+    color:var(--text);
+    margin:0;
+    line-height:1.7;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:32px 24px 60px;}
+  header.doc-head{
+    border-bottom:4px solid var(--primary);
+    padding-bottom:18px;margin-bottom:30px;
+  }
+  header.doc-head h1{
+    color:var(--primary);font-size:28px;margin:0 0 8px;
+  }
+  header.doc-head .sub{color:var(--muted);font-size:15px;}
+  h2{
+    color:var(--primary);font-size:21px;
+    border-left:6px solid var(--accent);
+    padding:6px 0 6px 14px;margin:38px 0 16px;
+  }
+  h3{color:var(--accent);font-size:17px;margin:22px 0 10px;}
+  p{margin:10px 0;}
+  .meta-box{
+    background:var(--accent-bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 22px;margin:18px 0;
+  }
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+  .stat-card{
+    background:#fff;border:1px solid var(--border);border-radius:10px;
+    padding:18px;text-align:center;
+  }
+  .stat-card .num{font-size:32px;font-weight:700;color:var(--primary);}
+  .stat-card .lbl{color:var(--muted);font-size:14px;margin-top:4px;}
+  .quote-block{
+    background:var(--accent-bg);
+    border-left:5px solid var(--accent);
+    padding:14px 18px;border-radius:0 8px 8px 0;
+    white-space:pre-wrap;font-size:15px;color:#333;
+  }
+  figure{margin:18px 0;text-align:center;}
+  figure img{
+    max-width:100%;border:1px solid var(--border);border-radius:8px;
+    box-shadow:0 2px 10px rgba(31,78,121,.12);
+  }
+  figure figcaption{color:var(--muted);font-size:13px;margin-top:8px;}
+  table{
+    width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;
+  }
+  th{background:var(--primary);color:#fff;padding:9px 10px;text-align:left;font-weight:600;}
+  td{border:1px solid var(--border);padding:7px 10px;vertical-align:top;}
+  tr:nth-child(even) td{background:var(--accent-bg);}
+  .title-cell{min-width:280px;}
+  .scroll-table{max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px;}
+  ul.steps li{margin:6px 0;}
+  .note{font-size:13px;color:var(--muted);}
+  .tag{display:inline-block;background:var(--accent);color:#fff;border-radius:14px;padding:2px 12px;font-size:13px;margin-right:6px;}
+  footer{margin-top:50px;border-top:1px solid var(--border);padding-top:16px;color:var(--muted);font-size:13px;text-align:center;}
+  code{background:var(--accent-light);padding:1px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc-head">
+  <h1>任務紀錄檔</h1>
+  <div class="sub">結構工程期刊（中華民國結構工程學會）— 各期文章標題抓取與 Excel 匯出</div>
+  <div class="sub">產生日期：2026 年 5 月 29 日　|　來源網站：<code>www.csse.org.tw/wordpress/category/member/</code></div>
+</header>
+
+<h2>一、使用者原始指令（原封不動紀錄）</h2>
+
+<h3>指令一</h3>
+<div class="quote-block">替我看這個網站，這是結構工程期刊的頁面。共有16頁
+其中名稱為， **卷**期 (期別*) (*年)，(*為會變動的數字，會是中文數字或阿拉伯數字)
+我需要將其裡面的各篇標題抓出來 (如圖片中紅框處)。
+並其分別存成 EXCEL，其格式如下圖 (以圖片為範例)，並一筆一筆依序往下排
+第三十八卷  |   第四期  |   期別150   |    112年   |     標題</div>
+
+<h3>指令一所附圖片（使用者提供的範例，紅框標示處）</h3>
+<figure>
+  <img src="images/user_reference.png" alt="使用者提供的範例圖片">
+  <figcaption>圖：使用者原始附圖 — 第三十八卷第四期 (期別150) (112年)，紅框為需抓取的文章標題</figcaption>
+</figure>
+
+<h3>指令二</h3>
+<div class="quote-block">替我把這個任務寫成一個紀錄檔。用HTML來說明，其中除了將我給的指令與圖片原封不動的紀錄外，同時也可以用快照來顯示這個網頁的資訊，並且說明你處理了那些事，然後你的任務花了多少時間。
+HTML格式：白底，輔色系，微軟正黑體
+如果HTML搭配照片需要另外的空間，則將其檔名全部都設定好 (用英文，只要能找到即可)，並給我壓縮檔。</div>
+
+<h2>二、網頁資訊快照</h2>
+<p>以下為抓取當下擷取的網站實際畫面，作為資料來源佐證。</p>
+
+<figure>
+  <img src="images/snapshot_homepage.png" alt="網站首頁快照">
+  <figcaption>快照 1：結構工程學會「結構工程期刊」分類頁首頁，最新一期為第四十一卷第一期 (期別159) (115年)</figcaption>
+</figure>
+
+<figure>
+  <img src="images/snapshot_example_issue.png" alt="範例期別快照">
+  <figcaption>快照 2：第三十八卷第四期 (期別150) (112年) 的展開內容，對應使用者範例圖（已排除 Q&amp;A 與全文連結）</figcaption>
+</figure>
+
+<figure>
+  <img src="images/snapshot_pagination.png" alt="分頁列快照">
+  <figcaption>快照 3：頁面底部分頁列，顯示「第 1 頁，共 16 頁」，確認共 16 頁需逐頁處理</figcaption>
+</figure>
+
+<h2>三、處理流程與工作說明</h2>
+<p>本次任務的處理步驟如下：</p>
+<ul class="steps">
+  <li><b>確認網站結構：</b>瀏覽期刊分類頁，確認分頁機制為 16 頁，每頁含多個期別（卷／期），期別標題格式為「第X卷第Y期 (期別Z) (W年)」，其中數字可能為中文數字或阿拉伯數字。</li>
+  <li><b>解析 DOM 結構：</b>分析網頁為 Elementor 建置，期別標題位於 <code>.elementor-heading-title</code>，各篇文章標題位於 <code>.elementor-toggle-title</code> 的摺疊清單中。</li>
+  <li><b>逐頁抓取：</b>透過程式（<code>fetch</code> + <code>DOMParser</code>）依序讀取全部 16 頁，擷取每個期別與其底下所有文章標題。</li>
+  <li><b>資料清理：</b>排除非論文項目，包括「Q&amp;A／Q&amp;A 專欄」、「全文連結 (會員限定)」、「編輯委員」、「邀稿與投稿須知」、「期刊論文訂閱單」、「版權聲明」、「客座主編／特刊引言」等。</li>
+  <li><b>欄位拆解：</b>將每個期別標題以正規表示式拆為四欄（卷、期、期別、年份），並與文章標題組成第五欄。</li>
+  <li><b>匯出 Excel：</b>使用 SheetJS 產生 <code>.xlsx</code> 檔（含中文欄寬設定），每篇文章一列，依「最新期 → 最舊期」順序排列。</li>
+  <li><b>產生紀錄檔：</b>擷取網頁快照、保留原始指令與圖片，整理為本 HTML 紀錄並打包為壓縮檔。</li>
+</ul>
+
+<h2>四、抓取結果統計</h2>
+<div class="meta-grid">
+  <div class="stat-card"><div class="num">16</div><div class="lbl">處理頁數</div></div>
+  <div class="stat-card"><div class="num">158</div><div class="lbl">期別總數</div></div>
+  <div class="stat-card"><div class="num">1127</div><div class="lbl">文章標題總數</div></div>
+  <div class="stat-card"><div class="num">1 ~ 159</div><div class="lbl">期別範圍</div></div>
+</div>
+<p class="note">※ 備註：網站上「第三十四卷第一期 (期別133) (108年)」有兩筆內容不同的貼文，兩筆皆完整保留，故期別數略多於連續編號。</p>
+
+<h3>Excel 輸出格式（範例，對應使用者指定格式）</h3>
+<table>
+  <thead><tr><th>卷</th><th>期</th><th>期別</th><th>年份</th><th>標題</th></tr></thead>
+  <tbody>
+    <tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">組合式橢圓形鋼框補強構件之分析方法研究</td></tr>
+    <tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">含混凝土防火層鋼結構梁柱接頭之受撓行為</td></tr>
+  </tbody>
+</table>
+
+<h3>資料內容預覽（前 60 筆，完整資料請見 Excel 檔）</h3>
+<div class="scroll-table">
+<table>
+  <thead><tr><th>卷</th><th>期</th><th>期別</th><th>年份</th><th>標題</th></tr></thead>
+  <tbody><tr><td>第四十一卷</td><td>第一期</td><td>期別159</td><td>115年</td><td class="title-cell">非線性動力分析性能評估法於裝設質量阻尼器結構 之減震效能評估應用</td></tr><tr><td>第四十一卷</td><td>第一期</td><td>期別159</td><td>115年</td><td class="title-cell">以FLAC3D Byrne模型探討地下構造物於不同埋置 深度之地層反應</td></tr><tr><td>第四十一卷</td><td>第一期</td><td>期別159</td><td>115年</td><td class="title-cell">離岸風機塔架結構之調諧質量阻尼器之 強健性最佳化設計</td></tr><tr><td>第四十一卷</td><td>第一期</td><td>期別159</td><td>115年</td><td class="title-cell">地上型地震超材料之表面波衰減設計策略</td></tr><tr><td>第四十一卷</td><td>第一期</td><td>期別159</td><td>115年</td><td class="title-cell">基於變分模態分解實現離線同步與模態分析</td></tr><tr><td>第四十卷</td><td>第四期</td><td>期別158</td><td>114年</td><td class="title-cell">鋼構與耦合牆結構系統之振動台實驗規劃及數值模擬</td></tr><tr><td>第四十卷</td><td>第四期</td><td>期別158</td><td>114年</td><td class="title-cell">彎矩與剪力降伏型耐震間柱之特性比較</td></tr><tr><td>第四十卷</td><td>第四期</td><td>期別158</td><td>114年</td><td class="title-cell">長跨挫屈束制支撐結合強脊構架耐震設計與分析</td></tr><tr><td>第四十卷</td><td>第四期</td><td>期別158</td><td>114年</td><td class="title-cell">套筒式基礎管接合熱點應力法特徵資料於 全域座標直接求取之演算法</td></tr><tr><td>第四十卷</td><td>第四期</td><td>期別158</td><td>114年</td><td class="title-cell">BWR用過核子燃料處置罐之震後承載影響分析</td></tr><tr><td>第四十卷</td><td>第三期</td><td>期別157</td><td>114年</td><td class="title-cell">基於人工智慧於橋梁結構劣化辨識與量化評估</td></tr><tr><td>第四十卷</td><td>第三期</td><td>期別157</td><td>114年</td><td class="title-cell">勞動部志清大樓耐震補強、地震監測與AI監控建置</td></tr><tr><td>第四十卷</td><td>第三期</td><td>期別157</td><td>114年</td><td class="title-cell">金門大橋橋梁安全監測系統</td></tr><tr><td>第四十卷</td><td>第三期</td><td>期別157</td><td>114年</td><td class="title-cell">0121 嘉義地震楠西國中校舍震損勘察與分析</td></tr><tr><td>第四十卷</td><td>第三期</td><td>期別157</td><td>114年</td><td class="title-cell">以簡支梁模擬二維矩形土體傳遞邊界之技術開發</td></tr><tr><td>第四十卷</td><td>第二期</td><td>期別156</td><td>114年</td><td class="title-cell">建築混凝土中性化深度與齡期關係之統計研究</td></tr><tr><td>第四十卷</td><td>第二期</td><td>期別156</td><td>114年</td><td class="title-cell">基於牽引力的深度能量法 (tDEM) 求解彈性體問題初探</td></tr><tr><td>第四十卷</td><td>第二期</td><td>期別156</td><td>114年</td><td class="title-cell">蓋板加勁剪力降伏型耐震間柱耐震試驗與設計研究</td></tr><tr><td>第四十卷</td><td>第二期</td><td>期別156</td><td>114年</td><td class="title-cell">圓形鋼管橋墩之耐震徑厚比與破壞風險分析</td></tr><tr><td>第四十卷</td><td>第二期</td><td>期別156</td><td>114年</td><td class="title-cell">挫屈束制斜撐平板狀核心鋼板高模態外推力之評估與試驗驗證</td></tr><tr><td>第四十卷</td><td>第一期</td><td>期別155</td><td>114年</td><td class="title-cell">鋼拱吊索橋之長期健康監測 —以國道2號大園鋼拱橋為例</td></tr><tr><td>第四十卷</td><td>第一期</td><td>期別155</td><td>114年</td><td class="title-cell">國道3號烏溪1號橋預力箱型梁長期檢監測系統建置與初步成果</td></tr><tr><td>第四十卷</td><td>第一期</td><td>期別155</td><td>114年</td><td class="title-cell">以敲擊反應方式評估植筋埋入品質之檢測技術</td></tr><tr><td>第四十卷</td><td>第一期</td><td>期別155</td><td>114年</td><td class="title-cell">震損低矮鋼筋混凝土牆之殘餘耐震性能試驗與模擬</td></tr><tr><td>第四十卷</td><td>第一期</td><td>期別155</td><td>114年</td><td class="title-cell">公用天然氣管線地震災損推估模式之研擬與應用</td></tr><tr><td>第三十九卷</td><td>第四期</td><td>期別154</td><td>113年</td><td class="title-cell">國道3號烏溪1號橋現況調查、補強設計和施工及長期監測</td></tr><tr><td>第三十九卷</td><td>第四期</td><td>期別154</td><td>113年</td><td class="title-cell">鋼筋混凝土結構耐震評估之自動化輔助程式開發</td></tr><tr><td>第三十九卷</td><td>第四期</td><td>期別154</td><td>113年</td><td class="title-cell">台度磚牆剪力強度公式對鋼筋混凝土建築物側推分析的影響</td></tr><tr><td>第三十九卷</td><td>第四期</td><td>期別154</td><td>113年</td><td class="title-cell">應用變分自動編碼器產生人造地震歷時</td></tr><tr><td>第三十九卷</td><td>第四期</td><td>期別154</td><td>113年</td><td class="title-cell">雙軸向動態試驗系統之動態特性識別與探討</td></tr><tr><td>第三十九卷</td><td>第三期</td><td>期別153</td><td>113年</td><td class="title-cell">電磁式可變阻尼隔震系統之研發</td></tr><tr><td>第三十九卷</td><td>第三期</td><td>期別153</td><td>113年</td><td class="title-cell">結合強震預警與半主動滾動隔震支承之研發與試驗驗證</td></tr><tr><td>第三十九卷</td><td>第三期</td><td>期別153</td><td>113年</td><td class="title-cell">具斜交黏滯阻尼器之幾何非線性隔震系統的開發與性能分析</td></tr><tr><td>第三十九卷</td><td>第三期</td><td>期別153</td><td>113年</td><td class="title-cell">應用主動激振法與機器學習生成結構主動控制律之研究</td></tr><tr><td>第三十九卷</td><td>第三期</td><td>期別153</td><td>113年</td><td class="title-cell">含摩擦阻尼器鋼筋混凝土結構耐震補強之性能設計法及耐震評估</td></tr><tr><td>第三十九卷</td><td>第三期</td><td>期別153</td><td>113年</td><td class="title-cell">靜態輸出回饋與參數更新迭代方法設計最佳目標反應之被動調諧質量阻尼器</td></tr><tr><td>第三十九卷</td><td>第二期</td><td>期別152</td><td>113年</td><td class="title-cell">鋼筋混凝土箱型梁碳纖維貼片剪力補強試驗</td></tr><tr><td>第三十九卷</td><td>第二期</td><td>期別152</td><td>113年</td><td class="title-cell">高強度橫向鋼筋預力梁之剪力行為</td></tr><tr><td>第三十九卷</td><td>第二期</td><td>期別152</td><td>113年</td><td class="title-cell">含中等韌性箱型鋼柱七層樓鋼造二元構架系統之複合模擬子結構試驗</td></tr><tr><td>第三十九卷</td><td>第二期</td><td>期別152</td><td>113年</td><td class="title-cell">立面鋼木混合結構水平設計地震力之研究</td></tr><tr><td>第三十九卷</td><td>第二期</td><td>期別152</td><td>113年</td><td class="title-cell">經驗與統計格林函數法在地震動模擬上之應用與GUI 程式開發</td></tr><tr><td>第三十九卷</td><td>第一期</td><td>期別151</td><td>113年</td><td class="title-cell">多功式隔震系統之性能測試與驗證</td></tr><tr><td>第三十九卷</td><td>第一期</td><td>期別151</td><td>113年</td><td class="title-cell">結合相空間吸引子與深度學習於橋梁沖刷深度預測之應用</td></tr><tr><td>第三十九卷</td><td>第一期</td><td>期別151</td><td>113年</td><td class="title-cell">基於鉛心橡膠支承基底隔震建築之高寬比探討</td></tr><tr><td>第三十九卷</td><td>第一期</td><td>期別151</td><td>113年</td><td class="title-cell">複合實驗於鋼筋混凝土結構耐震補強試驗之應用</td></tr><tr><td>第三十九卷</td><td>第一期</td><td>期別151</td><td>113年</td><td class="title-cell">新型隔減震技術：共振筒形地震超材料</td></tr><tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">組合式橢圓形鋼框補強構件之分析方法研究</td></tr><tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">含混凝土防火層鋼結構梁柱接頭之受撓行為</td></tr><tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">鋼筋混凝土梁穿孔補強新工法之研究</td></tr><tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">鋼筋混凝土二元系統剪力牆之剪力強度設計</td></tr><tr><td>第三十八卷</td><td>第四期</td><td>期別150</td><td>112年</td><td class="title-cell">山腳斷層地震對鋼筋混凝土建築物配置黏彈性制震壁之耐震性能評估</td></tr><tr><td>第三十八卷</td><td>第三期</td><td>期別149</td><td>112年</td><td class="title-cell">含鋼板阻尼器構架最佳化設計與軟體</td></tr><tr><td>第三十八卷</td><td>第三期</td><td>期別149</td><td>112年</td><td class="title-cell">含摩擦阻尼器外伸臂結構耐震性能研究</td></tr><tr><td>第三十八卷</td><td>第三期</td><td>期別149</td><td>112年</td><td class="title-cell">高強度鋼纖維混凝土開口剪力牆預測模型與行為研究</td></tr><tr><td>第三十八卷</td><td>第三期</td><td>期別149</td><td>112年</td><td class="title-cell">使用高強度撓曲鋼筋之低軸壓鋼筋混凝土柱振動台試驗</td></tr><tr><td>第三十八卷</td><td>第三期</td><td>期別149</td><td>112年</td><td class="title-cell">應用非線性靜力側推分析訂定建築物樓板需求加速度之程序與驗證</td></tr><tr><td>第三十八卷</td><td>第二期</td><td>期別148</td><td>112年</td><td class="title-cell">電熱熔渣銲儲倉口形狀對其破壞時機之影響</td></tr><tr><td>第三十八卷</td><td>第二期</td><td>期別148</td><td>112年</td><td class="title-cell">繫筋配置對於鋼筋混凝土梁耐震性能影響之實驗研究</td></tr><tr><td>第三十八卷</td><td>第二期</td><td>期別148</td><td>112年</td><td class="title-cell">台度磚牆剪力強度計算公式</td></tr><tr><td>第三十八卷</td><td>第二期</td><td>期別148</td><td>112年</td><td class="title-cell">三段式鋼板阻尼器耐震試驗與設計研究</td></tr></tbody>
+</table>
+</div>
+
+<h3>各期別文章數一覽（共 158 期）</h3>
+<div class="scroll-table">
+<table>
+  <thead><tr><th>#</th><th>期別標題</th><th>文章數</th></tr></thead>
+  <tbody><tr><td>1</td><td>第四十一卷第一期 (期別159) (115年)</td><td style="text-align:center">5</td></tr><tr><td>2</td><td>第四十卷第四期 (期別158) (114年)</td><td style="text-align:center">5</td></tr><tr><td>3</td><td>第四十卷第三期 (期別157) (114年)</td><td style="text-align:center">5</td></tr><tr><td>4</td><td>第四十卷第二期 (期別156) (114年)</td><td style="text-align:center">5</td></tr><tr><td>5</td><td>第四十卷第一期 (期別155) (114年)</td><td style="text-align:center">5</td></tr><tr><td>6</td><td>第三十九卷第四期 (期別154) (113年)</td><td style="text-align:center">5</td></tr><tr><td>7</td><td>第三十九卷第三期 (期別153) (113年)</td><td style="text-align:center">6</td></tr><tr><td>8</td><td>第三十九卷第二期 (期別152) (113年)</td><td style="text-align:center">5</td></tr><tr><td>9</td><td>第三十九卷第一期 (期別151) (113年)</td><td style="text-align:center">5</td></tr><tr><td>10</td><td>第三十八卷第四期 (期別150) (112年)</td><td style="text-align:center">5</td></tr><tr><td>11</td><td>第三十八卷第三期 (期別149) (112年)</td><td style="text-align:center">5</td></tr><tr><td>12</td><td>第三十八卷第二期 (期別148) (112年)</td><td style="text-align:center">5</td></tr><tr><td>13</td><td>第三十八卷第一期 (期別147) (112年)</td><td style="text-align:center">5</td></tr><tr><td>14</td><td>第三十七卷第四期 (期別146) (111年)</td><td style="text-align:center">7</td></tr><tr><td>15</td><td>第三十七卷第三期 (期別145) (111年)</td><td style="text-align:center">6</td></tr><tr><td>16</td><td>第三十七卷第二期 (期別144) (111年)</td><td style="text-align:center">6</td></tr><tr><td>17</td><td>第三十七卷第一期 (期別143) (111年)</td><td style="text-align:center">5</td></tr><tr><td>18</td><td>第三十六卷第四期 (期別142) (110年)</td><td style="text-align:center">5</td></tr><tr><td>19</td><td>第三十六卷第三期 (期別141) (110年)</td><td style="text-align:center">7</td></tr><tr><td>20</td><td>第三十六卷第二期 (期別140) (110年)</td><td style="text-align:center">5</td></tr><tr><td>21</td><td>第三十六卷第一期(期別139)(110年)</td><td style="text-align:center">6</td></tr><tr><td>22</td><td>第三十五卷第四期 (期別138) (109年)</td><td style="text-align:center">6</td></tr><tr><td>23</td><td>第三十五卷第三期(期別137)(109年)</td><td style="text-align:center">5</td></tr><tr><td>24</td><td>第三十五卷第一期(期別135)(109年)</td><td style="text-align:center">4</td></tr><tr><td>25</td><td>第三十四卷第二期 (期別134) (108年)</td><td style="text-align:center">5</td></tr><tr><td>26</td><td>第三十四卷第一期 (期別133) (108年)</td><td style="text-align:center">5</td></tr><tr><td>27</td><td>第三十三卷第四期 (期別132) (107年)</td><td style="text-align:center">5</td></tr><tr><td>28</td><td>第三十三卷第三期 (期別131) (107年)</td><td style="text-align:center">5</td></tr><tr><td>29</td><td>第三十三卷第二期 (期別130) (107年)</td><td style="text-align:center">5</td></tr><tr><td>30</td><td>第三十三卷第一期 (期別129) (107年)</td><td style="text-align:center">5</td></tr><tr><td>31</td><td>第三十二卷第四期 (期別128) (106年)</td><td style="text-align:center">5</td></tr><tr><td>32</td><td>第三十二卷第三期 (期別127) (106年)</td><td style="text-align:center">5</td></tr><tr><td>33</td><td>第三十二卷第二期 (期別126) (106年)</td><td style="text-align:center">5</td></tr><tr><td>34</td><td>第三十二卷第一期 (期別125) (106年)</td><td style="text-align:center">5</td></tr><tr><td>35</td><td>第三十一卷第四期 (期別124) (105年)</td><td style="text-align:center">6</td></tr><tr><td>36</td><td>第三十一卷第三期 (期別123) (105年)</td><td style="text-align:center">5</td></tr><tr><td>37</td><td>第三十一卷第二期 (期別122) (105年)</td><td style="text-align:center">6</td></tr><tr><td>38</td><td>第三十一卷第一期 (期別121) (105年)</td><td style="text-align:center">5</td></tr><tr><td>39</td><td>第三十卷第四期 (期別120) (104年)</td><td style="text-align:center">5</td></tr><tr><td>40</td><td>第三十卷第三期 (期別119) (104年)</td><td style="text-align:center">5</td></tr><tr><td>41</td><td>第三十卷第二期 (期別118) (104年)</td><td style="text-align:center">5</td></tr><tr><td>42</td><td>第三十卷第一期 (期別117) (104年)</td><td style="text-align:center">5</td></tr><tr><td>43</td><td>第二十九卷第四期 (期別116) (103年)</td><td style="text-align:center">5</td></tr><tr><td>44</td><td>第二十九卷第三期 (期別115) (103年)</td><td style="text-align:center">6</td></tr><tr><td>45</td><td>第二十九卷第二期 (期別114) (103年)</td><td style="text-align:center">6</td></tr><tr><td>46</td><td>第二十九卷第一期 (期別113) (102年)</td><td style="text-align:center">6</td></tr><tr><td>47</td><td>第二十八卷第四期 (期別112) (102年)</td><td style="text-align:center">5</td></tr><tr><td>48</td><td>第二十八卷第三期 (期別111) (102年)</td><td style="text-align:center">5</td></tr><tr><td>49</td><td>第二十八卷第二期 (期別110) (102年)</td><td style="text-align:center">5</td></tr><tr><td>50</td><td>第二十八卷第一期 (期別109) (102年)</td><td style="text-align:center">6</td></tr><tr><td>51</td><td>第二十七卷第四期 (期別108) (101年)</td><td style="text-align:center">6</td></tr><tr><td>52</td><td>第二十七卷第三期 (期別107) (101年)</td><td style="text-align:center">6</td></tr><tr><td>53</td><td>第二十七卷第二期 (期別106) (101年)</td><td style="text-align:center">7</td></tr><tr><td>54</td><td>第二十七卷第一期 (期別105) (101年)</td><td style="text-align:center">12</td></tr><tr><td>55</td><td>第二十六卷第四期 (期別104) (100年)</td><td style="text-align:center">6</td></tr><tr><td>56</td><td>第二十六卷第三期 (期別103) (100年)</td><td style="text-align:center">5</td></tr><tr><td>57</td><td>第二十六卷第二期 (期別102) (100年)</td><td style="text-align:center">5</td></tr><tr><td>58</td><td>第二十六卷第一期 (期別101) (100年)</td><td style="text-align:center">8</td></tr><tr><td>59</td><td>第二十五卷第四期 (期別100) (99年)</td><td style="text-align:center">7</td></tr><tr><td>60</td><td>第二十五卷第三期 (期別99) (99年)</td><td style="text-align:center">7</td></tr><tr><td>61</td><td>第二十五卷第二期 (期別98) (99年)</td><td style="text-align:center">6</td></tr><tr><td>62</td><td>第二十五卷第一期 (期別97) (99年)</td><td style="text-align:center">6</td></tr><tr><td>63</td><td>第二十四卷第四期 (期別96) (98年)</td><td style="text-align:center">6</td></tr><tr><td>64</td><td>第二十四卷第三期 (期別95) (98年)</td><td style="text-align:center">6</td></tr><tr><td>65</td><td>第二十四卷第二期 (期別94) (98年)</td><td style="text-align:center">6</td></tr><tr><td>66</td><td>第二十四卷第一期 (期別93) (98年)</td><td style="text-align:center">7</td></tr><tr><td>67</td><td>第二十三卷第四期 (期別92) (97年)</td><td style="text-align:center">7</td></tr><tr><td>68</td><td>第二十三卷第三期 (期別91) (97年)</td><td style="text-align:center">6</td></tr><tr><td>69</td><td>第二十三卷第二期 (期別90) (97年)</td><td style="text-align:center">5</td></tr><tr><td>70</td><td>第二十三卷第一期 (期別89) (97年)</td><td style="text-align:center">6</td></tr><tr><td>71</td><td>第二十二卷第四期 (期別88) (96年)</td><td style="text-align:center">7</td></tr><tr><td>72</td><td>第二十二卷第三期 (期別87) (96年)</td><td style="text-align:center">6</td></tr><tr><td>73</td><td>第二十二卷第二期 (期別86) (96年)</td><td style="text-align:center">5</td></tr><tr><td>74</td><td>第二十二卷第一期 (期別85) (96年)</td><td style="text-align:center">7</td></tr><tr><td>75</td><td>第二十一卷第四期 (期別84) (95年)</td><td style="text-align:center">8</td></tr><tr><td>76</td><td>第二十一卷第三期 (期別83) (95年)</td><td style="text-align:center">6</td></tr><tr><td>77</td><td>第二十一卷第二期 (期別82) (95年)</td><td style="text-align:center">7</td></tr><tr><td>78</td><td>第二十一卷第一期 (期別81) (95年)</td><td style="text-align:center">9</td></tr><tr><td>79</td><td>第二十卷第四期 (期別80) (94年)</td><td style="text-align:center">7</td></tr><tr><td>80</td><td>第二十卷第三期 (期別79) (94年)</td><td style="text-align:center">6</td></tr><tr><td>81</td><td>第二十卷第二期 (期別78) (94年)</td><td style="text-align:center">6</td></tr><tr><td>82</td><td>第二十卷第一期 (期別77) (94年)</td><td style="text-align:center">6</td></tr><tr><td>83</td><td>第十九卷第四期 (期別76) (93年)</td><td style="text-align:center">8</td></tr><tr><td>84</td><td>第十九卷第三期 (期別75) (93年)</td><td style="text-align:center">7</td></tr><tr><td>85</td><td>第十九卷第二期 (期別74) (93年)</td><td style="text-align:center">7</td></tr><tr><td>86</td><td>第十九卷第一期 (期別73) (93年)</td><td style="text-align:center">5</td></tr><tr><td>87</td><td>第十八卷第四期 (期別72) (92年)</td><td style="text-align:center">6</td></tr><tr><td>88</td><td>第十八卷第三期 (期別71) (92年)</td><td style="text-align:center">6</td></tr><tr><td>89</td><td>第十八卷第二期 (期別70) (92年)</td><td style="text-align:center">6</td></tr><tr><td>90</td><td>第十八卷第一期 (期別69) (92年)</td><td style="text-align:center">6</td></tr><tr><td>91</td><td>第十七卷第四期 (期別68) (91年)</td><td style="text-align:center">7</td></tr><tr><td>92</td><td>第十七卷第三期 (期別67) (91年)</td><td style="text-align:center">10</td></tr><tr><td>93</td><td>第十七卷第二期 (期別66) (91年)</td><td style="text-align:center">6</td></tr><tr><td>94</td><td>第十七卷第一期 (期別65) (91年)</td><td style="text-align:center">7</td></tr><tr><td>95</td><td>第十六卷第四期 (期別64) (90年)</td><td style="text-align:center">7</td></tr><tr><td>96</td><td>第十六卷第三期 (期別63) (90年)</td><td style="text-align:center">7</td></tr><tr><td>97</td><td>第十六卷第二期 (期別62) (90年)</td><td style="text-align:center">7</td></tr><tr><td>98</td><td>第十六卷第一期 (期別61) (90年)</td><td style="text-align:center">7</td></tr><tr><td>99</td><td>第十五卷第四期 (期別60) (89年)</td><td style="text-align:center">5</td></tr><tr><td>100</td><td>第十五卷第三期 (期別59) (89年)</td><td style="text-align:center">7</td></tr><tr><td>101</td><td>第十五卷第二期 (期別58) (89年)</td><td style="text-align:center">7</td></tr><tr><td>102</td><td>第十五卷第一期 (期別57) (89年)</td><td style="text-align:center">6</td></tr><tr><td>103</td><td>第十四卷第四期 (期別56) (88年)</td><td style="text-align:center">9</td></tr><tr><td>104</td><td>第十四卷第三期 (期別55) (88年)</td><td style="text-align:center">11</td></tr><tr><td>105</td><td>第十四卷第二期 (期別54) (88年)</td><td style="text-align:center">7</td></tr><tr><td>106</td><td>第十四卷第一期 (期別53) (88年)</td><td style="text-align:center">7</td></tr><tr><td>107</td><td>第十三卷第四期 (期別52) (87年)</td><td style="text-align:center">7</td></tr><tr><td>108</td><td>第十三卷第三期 (期別51) (87年)</td><td style="text-align:center">10</td></tr><tr><td>109</td><td>第十三卷第二期 (期別50) (87年)</td><td style="text-align:center">7</td></tr><tr><td>110</td><td>第十三卷第一期 (期別49) (87年)</td><td style="text-align:center">5</td></tr><tr><td>111</td><td>第十二卷第四期 (期別48) (86年)</td><td style="text-align:center">7</td></tr><tr><td>112</td><td>第十二卷第三期 (期別47) (86年)</td><td style="text-align:center">8</td></tr><tr><td>113</td><td>第十二卷第二期 (期別46) (86年)</td><td style="text-align:center">8</td></tr><tr><td>114</td><td>第十二卷第一期 (期別45) (86年)</td><td style="text-align:center">9</td></tr><tr><td>115</td><td>第十一卷第四期 (期別44) (85年)</td><td style="text-align:center">12</td></tr><tr><td>116</td><td>第十一卷第三期 (期別43) (85年)</td><td style="text-align:center">10</td></tr><tr><td>117</td><td>第十一卷第二期 (期別42) (85年)</td><td style="text-align:center">8</td></tr><tr><td>118</td><td>第十一卷第一期 (期別41) (85年)</td><td style="text-align:center">13</td></tr><tr><td>119</td><td>第十卷第四期 (期別40) (84年)</td><td style="text-align:center">8</td></tr><tr><td>120</td><td>第十卷第三期 (期別39) (84年)</td><td style="text-align:center">8</td></tr><tr><td>121</td><td>第十卷第二期 (期別38) (84年)</td><td style="text-align:center">11</td></tr><tr><td>122</td><td>第十卷第一期 (期別37) (84年)</td><td style="text-align:center">11</td></tr><tr><td>123</td><td>第九卷第四期 (期別36) (83年)</td><td style="text-align:center">7</td></tr><tr><td>124</td><td>第九卷第三期 (期別35) (83年)</td><td style="text-align:center">7</td></tr><tr><td>125</td><td>第九卷第二期 (期別34) (83年)</td><td style="text-align:center">5</td></tr><tr><td>126</td><td>第九卷第一期 (期別33) (83年)</td><td style="text-align:center">12</td></tr><tr><td>127</td><td>第八卷第四期 (期別32) (82年)</td><td style="text-align:center">6</td></tr><tr><td>128</td><td>第八卷第三期 (期別31) (82年)</td><td style="text-align:center">8</td></tr><tr><td>129</td><td>第八卷第二期 (期別30) (82年)</td><td style="text-align:center">8</td></tr><tr><td>130</td><td>第八卷第一期 (期別29) (82年)</td><td style="text-align:center">7</td></tr><tr><td>131</td><td>第七卷第四期 (期別28) (81年)</td><td style="text-align:center">8</td></tr><tr><td>132</td><td>第七卷第三期 (期別27) (81年)</td><td style="text-align:center">7</td></tr><tr><td>133</td><td>第七卷第二期 (期別26) (81年)</td><td style="text-align:center">7</td></tr><tr><td>134</td><td>第七卷第一期 (期別25) (81年)</td><td style="text-align:center">8</td></tr><tr><td>135</td><td>第六卷第四期 (期別24) (80年)</td><td style="text-align:center">6</td></tr><tr><td>136</td><td>第六卷第三期 (期別23) (80年)</td><td style="text-align:center">7</td></tr><tr><td>137</td><td>第六卷第二期 (期別22) (80年)</td><td style="text-align:center">10</td></tr><tr><td>138</td><td>第六卷第一期 (期別21) (80年)</td><td style="text-align:center">12</td></tr><tr><td>139</td><td>第五卷第四期 (期別20) (79年)</td><td style="text-align:center">7</td></tr><tr><td>140</td><td>第五卷第三期 (期別19) (79年)</td><td style="text-align:center">8</td></tr><tr><td>141</td><td>第五卷第二期 (期別18) (79年)</td><td style="text-align:center">10</td></tr><tr><td>142</td><td>第五卷第一期 (期別17) (79年)</td><td style="text-align:center">8</td></tr><tr><td>143</td><td>第四卷第四期 (期別16) (78年)</td><td style="text-align:center">9</td></tr><tr><td>144</td><td>第四卷第三期 (期別15) (78年)</td><td style="text-align:center">11</td></tr><tr><td>145</td><td>第四卷第二期 (期別14) (78年)</td><td style="text-align:center">12</td></tr><tr><td>146</td><td>第四卷第一期 (期別13) (78年)</td><td style="text-align:center">11</td></tr><tr><td>147</td><td>第三卷第四期 (期別12) (77年)</td><td style="text-align:center">11</td></tr><tr><td>148</td><td>第三卷第三期 (期別11) (77年)</td><td style="text-align:center">9</td></tr><tr><td>149</td><td>第三卷第二期 (期別10) (77年)</td><td style="text-align:center">11</td></tr><tr><td>150</td><td>第三卷第一期 (期別9) (77年)</td><td style="text-align:center">10</td></tr><tr><td>151</td><td>第二卷第四期 (期別8) (76年)</td><td style="text-align:center">11</td></tr><tr><td>152</td><td>第二卷第三期 (期別7) (76年)</td><td style="text-align:center">11</td></tr><tr><td>153</td><td>第二卷第二期 (期別6) (76年)</td><td style="text-align:center">12</td></tr><tr><td>154</td><td>第二卷第一期 (期別5) (76年)</td><td style="text-align:center">13</td></tr><tr><td>155</td><td>第一卷第四期 (期別4) (75年)</td><td style="text-align:center">12</td></tr><tr><td>156</td><td>第三十四卷第一期 (期別133) (108年)</td><td style="text-align:center">11</td></tr><tr><td>157</td><td>第一卷第二期 (期別2) (75年)</td><td style="text-align:center">14</td></tr><tr><td>158</td><td>第一卷第一期 (期別1) (75年)</td><td style="text-align:center">17</td></tr></tbody>
+</table>
+</div>
+
+<h2>五、任務耗時</h2>
+<div class="meta-box">
+  <p><span class="tag">資料抓取與 Excel 匯出</span>約 6 分鐘（含確認網站結構、解析 DOM、逐頁抓取 16 頁、清理資料、產生 xlsx 並驗證）。</p>
+  <p><span class="tag">紀錄檔製作</span>約 4 分鐘（含擷取網頁快照、整理流程說明、產生 HTML 與打包壓縮檔）。</p>
+  <p><b>合計約 10 分鐘。</b></p>
+  <p class="note">※ 以上為自動化處理的實際操作時間估計，實際時間依網路與系統回應略有差異。</p>
+</div>
+
+<footer>
+  本紀錄檔由自動化瀏覽器助理產生　|　資料來源：中華民國結構工程學會「結構工程期刊」<br>
+  檔案清單：<code>index.html</code>、<code>images/user_reference.png</code>、<code>images/snapshot_homepage.png</code>、<code>images/snapshot_example_issue.png</code>、<code>images/snapshot_pagination.png</code>
+</footer>
+
+</div>
+</body>
+</html>
